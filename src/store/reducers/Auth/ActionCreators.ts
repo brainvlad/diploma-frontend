@@ -8,8 +8,7 @@ export const loginAction =
     (data: AuthTypes.Request.Login) => async (dispatch: AppDispatch) => {
         try {
             dispatch(authSlice.actions.authFetch());
-            const res = await login(data);
-            console.log({res});
+            const res = await login(data);;
             localStorage.setItem("access", res.data.access);
             localStorage.setItem("refresh", res.data.refresh);
             const user = await getAuthUserData();

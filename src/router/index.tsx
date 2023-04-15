@@ -3,17 +3,17 @@ import {Routes, Route, Outlet} from "react-router-dom";
 import {useStyles} from "./styled";
 import {Box, CircularProgress, Container} from "@mui/material";
 
-// import RequireAuth from "./RequireAuth";
+import RequireAuth from "./RequireAuth";
 import {useAppSelector} from "../hooks/redux";
 import Header from "../components/Header";
 
 const AuthPage = lazy(() => import("../pages/Auth"));
 
+const GroupsListPage = lazy(() => import("../pages/Groups"));
+
 const AppRouter = (): JSX.Element => {
     const classes = useStyles();
     const {isAuthenticated} = useAppSelector((state) => state.auth);
-    const access = localStorage.getItem("access");
-    const userData = JSON.parse(localStorage.getItem("userData") || "null");
 
     return (
         <Suspense
@@ -34,13 +34,23 @@ const AppRouter = (): JSX.Element => {
                     path="/"
                     element={
                         <>
-                            {!!userData && <Header/>}
+                            {isAuthenticated && <Header/>}
                             <Box className={classes.main}>
                                 <Outlet/>
                             </Box>
                         </>
                     }
                 >
+                    <Route
+                        path="/*"
+                        element={
+                            <RequireAuth isAuthenticated={isAuthenticated}>
+                                <Routes>
+                                    <Route path={"groups"} element={<GroupsListPage/>}/>
+                                </Routes>
+                            </RequireAuth>
+                        }
+                    />
                     <Route path="*" element={<h1>404</h1>}/>
                 </Route>
 

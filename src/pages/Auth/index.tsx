@@ -32,7 +32,7 @@ const Auth: React.FC = () => {
 
     useLayoutEffect(() => {
         if (isAuthenticated) {
-            navigate("/main");
+            navigate("/groups");
         }
     }, [isAuthenticated, dispatch]);
 
