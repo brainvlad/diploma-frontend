@@ -1,11 +1,11 @@
-import {User} from "../../../types/user";
 import {createSlice} from "@reduxjs/toolkit";
+import {AuthUserInfo} from "../../../types/auth";
 
 interface AuthState {
     isAuthenticated: boolean;
     registerSuccess: boolean;
     error: null | string;
-    data: { user: User; access: string; refresh: string };
+    data: { user: AuthUserInfo | null; access: string; refresh: string };
     isLoading: boolean;
 }
 
@@ -13,7 +13,7 @@ const initialState: AuthState = {
     isAuthenticated: false,
     registerSuccess: false,
     data: {
-        user: JSON.parse(localStorage.getItem("userData") || "null"),
+        user: null,
         access: localStorage.getItem("access") || "",
         refresh: localStorage.getItem("refresh") || "",
     },

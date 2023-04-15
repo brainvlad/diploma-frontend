@@ -22,7 +22,9 @@ http.interceptors.request.use(
 );
 
 http.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        return response;
+    },
     (error) => {
         const originalRequest = error.config;
         if (error.response.status === 401 && !originalRequest.retry) {
