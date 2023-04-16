@@ -4,50 +4,54 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {Container} from "@mui/material";
+import {useEffect, useState} from "react";
+import {GroupItem} from "../../types/groups";
+import {getUserGroups} from "../../http/groups";
+import {getUserSubjects} from "../../http/subjects";
+import GroupsItem from "./components/GroupItem";
+import {getGroupsBySubjects} from "../../http/classes";
 
 const Groups = () => {
+
+    const [subjects, setSubjects] = useState<Array<any>>([]);
+    const [groups, setGroups] = useState<GroupItem[]>([]);
+
+    const [expanded, setExpanded] = useState<string | false>(false);
+
+    useEffect(() => {
+        getUserSubjects().then(res => setSubjects(res.data.list))
+    }, [])
+
+    const handleChange =
+        (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+            setExpanded(newExpanded ? panel : false);
+        };
+
     return (
-        <div>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography>Accordion 1</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                        malesuada lacus ex, sit amet blandit leo lobortis eget.
-                    </Typography>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
-                    <Typography>Accordion 2</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                        malesuada lacus ex, sit amet blandit leo lobortis eget.
-                    </Typography>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion disabled>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel3a-content"
-                    id="panel3a-header"
-                >
-                    <Typography>Disabled Accordion</Typography>
-                </AccordionSummary>
-            </Accordion>
-        </div>
+        <Container>
+            {!!subjects.length ? (
+                subjects.map((subject: any) => (
+                    <Accordion
+                        onClick={() => getGroupsBySubjects(subject.id).then((res) => setGroups(res.data.list))}
+                        onChange={handleChange(subject.name)}
+                        expanded={expanded === subject.name}
+                    >
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography>{subject.name}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {!!groups && groups.length ?
+                                groups.map(g => <GroupsItem id={g.id} name={g.name} description={g.description}/>)
+                                : null}
+                        </AccordionDetails>
+                    </Accordion>))
+            ) : null}
+        </Container>
     );
 }
 
