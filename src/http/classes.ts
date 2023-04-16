@@ -1,3 +1,4 @@
-import {http} from "./index"
+import { http } from "./index";
 
-export const getGroupsBySubjects = (subjectId: string) => http.get(`/classes/subject/${subjectId}`)
+export const getGroupsBySubjects = (subjectId: string) =>
+  http.get(`/classes/subject/${subjectId}`);

@@ -9,23 +9,23 @@ import { createTheme, ThemeProvider } from "@mui/material";
 const store = setupStore();
 
 const customTheme = createTheme({
-    palette: {
-        primary: {
-            main: "#1976d2",
-            contrastText: "white",
-        },
+  palette: {
+    primary: {
+      main: "#1976d2",
+      contrastText: "white",
     },
+  },
 });
 
 ReactDOM.render(
-    <Provider store={store}>
-        <React.StrictMode>
-            <ThemeProvider theme={customTheme}>
-                <App />
-            </ThemeProvider>
-        </React.StrictMode>
-    </Provider>,
-    document.getElementById("root")
+  <Provider store={store}>
+    <React.StrictMode>
+      <ThemeProvider theme={customTheme}>
+        <App />
+      </ThemeProvider>
+    </React.StrictMode>
+  </Provider>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

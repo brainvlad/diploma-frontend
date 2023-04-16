@@ -1,3 +1,3 @@
-import {http} from "./index";
+import { http } from "./index";
 
-export const getUserGroups = () => http.get("/groups/my")
+export const getUserGroups = () => http.get("/groups/my");
