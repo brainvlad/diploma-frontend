@@ -14,6 +14,7 @@ type Props = {
   contentText: string;
   handleSubmit: () => void;
   children: JSX.Element;
+  showAction: boolean;
 };
 
 export default function FormDialog({
@@ -22,6 +23,7 @@ export default function FormDialog({
   title,
   contentText,
   handleSubmit,
+  showAction,
   children,
 }: Props) {
   return (
@@ -34,7 +36,9 @@ export default function FormDialog({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Отмена</Button>
-          <Button onClick={handleSubmit}>Подтвердить</Button>
+          {showAction ? (
+            <Button onClick={handleSubmit}>Подтвердить</Button>
+          ) : null}
         </DialogActions>
       </Dialog>
     </div>

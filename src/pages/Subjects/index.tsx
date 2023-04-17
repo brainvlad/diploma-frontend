@@ -4,13 +4,15 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Container, Link, Stack } from "@mui/material";
+import { Container, IconButton, Link, Stack } from "@mui/material";
+import { OpenInNew as OpenInNewIcon } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { getUserSubjects } from "../../http/subjects";
 import GroupsItem from "./components/GroupItem";
 import { getGroupsBySubjects } from "../../http/classes";
 import SettingsBar from "./components/SettingsBar";
 import StudyPlanList from "./components/StudyPlanList";
+import { useNavigate } from "react-router-dom";
 
 const Groups = () => {
   const [subjects, setSubjects] = useState<Array<any>>([]);
@@ -18,6 +20,8 @@ const Groups = () => {
 
   const [expanded, setExpanded] = useState<string | false>(false);
   const [showStudyPlan, setShowStudyPlan] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUserSubjects().then((res) => setSubjects(res.data.list));
@@ -53,18 +57,31 @@ const Groups = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Stack spacing={2}>
-                      <Link
-                        href={"#"}
-                        onClick={() => setShowStudyPlan(!showStudyPlan)}
+                      <Stack
+                        spacing={1}
+                        direction={"row"}
+                        alignItems={"center"}
                       >
-                        <Typography>Учебный план</Typography>
-                      </Link>
-                      <div style={{margin: "10px 0"}}>
+                        <Link
+                          href={"#"}
+                          onClick={() => setShowStudyPlan(!showStudyPlan)}
+                        >
+                          <Typography>Учебный план</Typography>
+                        </Link>
+                        <IconButton
+                          onClick={() =>
+                            navigate(`/subjects/${subject.id}/study-plan`)
+                          }
+                        >
+                          <OpenInNewIcon />
+                        </IconButton>
+                      </Stack>
+                      <div style={{ margin: "10px 0" }}>
                         {showStudyPlan ? (
-                            <StudyPlanList
-                                open={showStudyPlan && expanded === subject.name}
-                                subjectId={subject.id}
-                            />
+                          <StudyPlanList
+                            open={showStudyPlan && expanded === subject.name}
+                            subjectId={subject.id}
+                          />
                         ) : null}
                       </div>
                     </Stack>

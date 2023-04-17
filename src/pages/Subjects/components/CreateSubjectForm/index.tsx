@@ -23,6 +23,7 @@ export default function CreateSubjectForm({ open, handleOpen }: Props) {
       title={"Создать новый предмет"}
       contentText={"Введите название предмета и алиас (короткое название)"}
       handleSubmit={handleSubmit}
+      showAction={true}
     >
       <Stack spacing={1}>
         <TextField
