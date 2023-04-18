@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useStyles } from "./styled";
 import { Box, CircularProgress, Container } from "@mui/material";
@@ -6,6 +6,7 @@ import { Box, CircularProgress, Container } from "@mui/material";
 import RequireAuth from "./RequireAuth";
 import { useAppSelector } from "../hooks/redux";
 import Header from "../components/Header";
+import { getAuthUserData } from "../http/auth";
 
 const AuthPage = lazy(() => import("../pages/Auth"));
 
@@ -18,6 +19,12 @@ const AppRouter = (): JSX.Element => {
   const classes = useStyles();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const accessExists = !!localStorage.getItem("access");
+
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    getAuthUserData().then((res) => setUser(res.data));
+  }, [isAuthenticated]);
 
   return (
     <Suspense
@@ -38,7 +45,7 @@ const AppRouter = (): JSX.Element => {
           path="/"
           element={
             <>
-              {accessExists && <Header />}
+              {accessExists && <Header userName={user?.firstName || "N"} />}
               <Box className={classes.main}>
                 <Outlet />
               </Box>

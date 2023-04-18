@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
+import { grey } from "@mui/material/colors";
 
 const pages = [
   {
@@ -26,7 +27,11 @@ const pages = [
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-function ResponsiveAppBar() {
+type Props = {
+  userName: string;
+};
+
+function ResponsiveAppBar({ userName }: Props) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -51,7 +56,13 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{
+        // backgroundColor: grey[400],
+        // color: "#000",
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -103,10 +114,12 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.label} onClick={() => {
-                    console.log(page);
+                <MenuItem
+                  key={page.label}
+                  onClick={() => {
                     navigate(page.to);
-                }}>
+                  }}
+                >
                   <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
@@ -129,7 +142,7 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Е-Кафедра
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
@@ -146,7 +159,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={userName} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu

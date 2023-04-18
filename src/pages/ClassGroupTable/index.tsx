@@ -41,7 +41,7 @@ const ClassGroupTable = () => {
   return (
     <Container>
       <Stack spacing={3}>
-        <Paper sx={{padding: 1}}>
+        <Paper sx={{ padding: 1 }}>
           <Stack spacing={1}>
             <Typography variant={"h5"}>{subjectName}</Typography>
             <Typography variant={"caption"}>Группа: {groupName}</Typography>
