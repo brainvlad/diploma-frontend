@@ -4,7 +4,14 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Container, IconButton, Link, Stack } from "@mui/material";
+import {
+  Container,
+  Divider,
+  IconButton,
+  Link,
+  Paper,
+  Stack,
+} from "@mui/material";
 import { OpenInNew as OpenInNewIcon } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { getUserSubjects } from "../../http/subjects";
@@ -13,6 +20,7 @@ import { getGroupsBySubjects } from "../../http/classes";
 import SettingsBar from "./components/SettingsBar";
 import StudyPlanList from "./components/StudyPlanList";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
 
 const Groups = () => {
   const [subjects, setSubjects] = useState<Array<any>>([]);
@@ -34,7 +42,11 @@ const Groups = () => {
 
   return (
     <Container>
-      <Stack spacing={1}>
+      <Stack spacing={3}>
+        <Box sx={{ padding: 1 }}>
+          <Typography variant={"h3"}>Мои предметы</Typography>
+          <Divider />
+        </Box>
         <SettingsBar />
         <div>
           {!!subjects.length

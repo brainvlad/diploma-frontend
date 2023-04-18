@@ -12,6 +12,7 @@ const AuthPage = lazy(() => import("../pages/Auth"));
 const SubjectsListPage = lazy(() => import("../pages/Subjects"));
 const ClassGroupTablePage = lazy(() => import("../pages/ClassGroupTable"));
 const StudyPlanSettingsPage = lazy(() => import("../pages/StudyPlanSettings"));
+const GroupsPage = lazy(() => import("../pages/Groups"));
 
 const AppRouter = (): JSX.Element => {
   const classes = useStyles();
@@ -50,6 +51,7 @@ const AppRouter = (): JSX.Element => {
               <RequireAuth isAuthenticated={accessExists}>
                 <Routes>
                   <Route path={"/subjects"} element={<SubjectsListPage />} />
+                  <Route path={"/groups"} element={<GroupsPage />} />
                   <Route
                     path={"/subjects/:subjectId/study-plan"}
                     element={<StudyPlanSettingsPage />}
