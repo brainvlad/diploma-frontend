@@ -15,7 +15,7 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
   const [openForm, setOpenForm] = useState(false);
 
   const criteriaTable: Record<string, number> = Object.fromEntries(
-    criterias.map((c) => [c.id, c.coefficient * 100 / 5])
+    criterias.map((c) => [c.id, (c.coefficient * 100) / 5])
   );
   const sumCoefficients = Object.values(criteriaTable).reduce(
     (a, b) => a + b,
@@ -31,14 +31,11 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
         )
       : {};
 
-  console.log({ criteriaTable, gradesTable, sumCoefficients });
-
   const calculatedGrade = (function () {
     let t = 0;
     Object.keys(gradesTable).forEach((key) => {
       t += (criteriaTable[key] * gradesTable[key]) / sumCoefficients;
     });
-    console.log({ t });
     return t;
   })();
 
@@ -66,7 +63,17 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
         <Tooltip
           title={criterias.length > 0 ? null : "Не заданы критерии оценки"}
         >
-          <Typography>{grade === null ? 0 : calculatedGrade}</Typography>
+          <Typography
+            color={
+              calculatedGrade > 40 && calculatedGrade > 0
+                ? "green"
+                : calculatedGrade === 0
+                ? "none"
+                : "red"
+            }
+          >
+            {grade === null ? 0 : calculatedGrade}
+          </Typography>
         </Tooltip>
         <Dialog
           contentText={""}
