@@ -12,10 +12,6 @@ import {
   Button,
   TextareaAutosize,
 } from "@mui/material";
-import {
-  createNewCriteria,
-  getPlanDataById,
-} from "../../../../http/study-plan";
 import { useForm } from "react-hook-form";
 
 type Props = {
@@ -77,12 +73,10 @@ const CriteriaSettingsForm = ({ criteria }: Props) => {
 
                 let t = 0;
                 Object.keys(criteriaTable).forEach((key) => {
-                  // @ts-ignore
                   t = t + (criteriaTable[key] * (inputTable[key] || 0)) / sum;
                 });
                 setTotalGrade(t);
                 t = 0;
-                console.log({ criteriaTable, inputCriteria, t });
               }}
             />
           </Stack>

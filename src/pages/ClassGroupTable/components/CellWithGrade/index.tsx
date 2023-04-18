@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TableCell } from "@mui/material";
+import { TableCell, Typography } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
 import CriteriaSettingsForm from "../CriteriaForm";
 import Dialog from "../../../../components/Dialog";
@@ -14,14 +14,6 @@ type Props = {
 const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
   const [openForm, setOpenForm] = useState(false);
 
-  const UpdateForm = () => (
-    <CriteriaSettingsForm
-      criteria={criterias}
-      studentId={studentId}
-      planItemId={planItemId}
-    />
-  );
-
   return (
     <>
       <TableCell
@@ -32,19 +24,29 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
           },
           border: "1px solid #cccccc",
         }}
-        onClick={() => setOpenForm(true)}
+        onDoubleClick={() => {
+          if (!openForm) {
+            setOpenForm(!openForm);
+          } else {
+            return;
+          }
+        }}
+        // aria-disabled={openForm}
       >
-        {grade}
-
+        <Typography>{grade}</Typography>
         <Dialog
           contentText={""}
           open={openForm}
-          handleClose={() => setOpenForm(false)}
-          handleSubmit={() => setOpenForm(false)}
+          handleClose={() => setOpenForm(!openForm)}
+          handleSubmit={() => setOpenForm(!openForm)}
           showAction={false}
           title={"Оценка"}
         >
-          <UpdateForm />
+          <CriteriaSettingsForm
+            criteria={criterias}
+            studentId={studentId}
+            planItemId={planItemId}
+          />
         </Dialog>
       </TableCell>
     </>
