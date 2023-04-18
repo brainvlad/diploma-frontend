@@ -13,6 +13,7 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { setStudentGrade } from "../../../../http/classes";
 
 type Props = {
   criteria: Array<any>;
@@ -20,7 +21,7 @@ type Props = {
   planItemId: string;
 };
 
-const CriteriaSettingsForm = ({ criteria }: Props) => {
+const CriteriaSettingsForm = ({ criteria, studentId }: Props) => {
   const [totalGrade, setTotalGrade] = useState(0);
   const [criteriaTable, setCriteriaTable] = useState<Record<string, number>>(
     {}
@@ -28,6 +29,24 @@ const CriteriaSettingsForm = ({ criteria }: Props) => {
   const [inputCriteria, setInputCriteria] = useState<Record<string, number>>(
     {}
   );
+
+  const { register, setValue, handleSubmit } = useForm();
+
+  const sendRequestForSetStudentGrade = async (data: any) => {
+    const grades: any[] = [];
+    Object.keys(data).map((key) => {
+      if (key !== "comment") {
+        grades.push(
+          Object.fromEntries([
+            ["criteriaEvalutationId", key],
+            ["studentId", studentId],
+            ["value", data[key]],
+          ])
+        );
+      }
+    });
+    await setStudentGrade({ grades });
+  };
 
   useEffect(() => {
     if (criteria.length > 0) {
@@ -37,10 +56,13 @@ const CriteriaSettingsForm = ({ criteria }: Props) => {
       });
 
       setCriteriaTable(Object.fromEntries(table));
+
+      criteria.forEach((c) => {
+        register(c.id);
+      });
+      register("comment");
     }
   }, []);
-
-  const { register, handleSubmit, setValue } = useForm();
 
   return (
     <div>
@@ -77,11 +99,18 @@ const CriteriaSettingsForm = ({ criteria }: Props) => {
                 });
                 setTotalGrade(t);
                 t = 0;
+                setValue(c.id, +e.target.value);
               }}
             />
           </Stack>
         ))}
-        <TextField multiline label={"Комментарий"} fullWidth rows={4} />
+        <TextField
+          multiline
+          label={"Комментарий"}
+          fullWidth
+          rows={4}
+          onChange={(e) => setValue("comment", e.target.value || "")}
+        />
         <Stack
           direction={"row"}
           justifyContent={"space-between"}
@@ -92,7 +121,12 @@ const CriteriaSettingsForm = ({ criteria }: Props) => {
             {totalGrade}
           </Typography>
         </Stack>
-        <Button variant={"outlined"}>Сохранить</Button>
+        <Button
+          variant={"outlined"}
+          onClick={handleSubmit(sendRequestForSetStudentGrade)}
+        >
+          Сохранить
+        </Button>
       </Stack>
     </div>
   );

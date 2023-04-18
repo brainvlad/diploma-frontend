@@ -71,7 +71,7 @@ const ClassGroupTable = () => {
                       {row.grade && plan?.length
                         ? plan.map((p) => (
                             <CellWithGrade
-                              grade={row.grade[p.id]?.value || 0}
+                              grade={row.grade[p.id] || null}
                               studentId={row.studentId}
                               planItemId={p.id}
                               criterias={p.criteria}
