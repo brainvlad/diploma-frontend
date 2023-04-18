@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { grey } from "@mui/material/colors";
+import Logo from "../Logo";
 
 const pages = [
   {
@@ -58,14 +59,16 @@ function ResponsiveAppBar({ userName }: Props) {
   return (
     <AppBar
       position="static"
-      sx={{
-        // backgroundColor: grey[400],
-        // color: "#000",
-      }}
+      sx={
+        {
+          // backgroundColor: grey[400],
+          // color: "#000",
+        }
+      }
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          {/*<Logo />*/}
           <Typography
             variant="h6"
             noWrap
@@ -81,7 +84,7 @@ function ResponsiveAppBar({ userName }: Props) {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Е-Кафедра
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -125,7 +128,9 @@ function ResponsiveAppBar({ userName }: Props) {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} >
+              <Logo />
+          </Box>
           <Typography
             variant="h5"
             noWrap
