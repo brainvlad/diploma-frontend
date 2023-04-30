@@ -56,7 +56,7 @@ const GroupSettings = () => {
       <Stack spacing={2}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link underline="hover" color="inherit" href="/">
+            <Link underline="hover" color="inherit" href="/groups">
               Мои группы
             </Link>
             <Typography color="text.primary">{groupName}</Typography>
