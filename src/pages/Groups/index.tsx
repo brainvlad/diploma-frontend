@@ -30,12 +30,16 @@ import Dialog from "../../components/Dialog";
 import * as _ from "lodash";
 import { useForm } from "react-hook-form";
 import Box from "@mui/material/Box";
+import GroupSettings from "./GroupSettings";
+import { useNavigate } from "react-router-dom";
 
 const Groups = () => {
   const [groups, setGroups] = useState<any[]>([]);
   const [myGroups, setMyGroups] = useState<any[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
   const [expanded, setExpanded] = useState(0);
+
+  const navigate = useNavigate();
 
   const { register, setValue, handleSubmit } = useForm();
 
@@ -45,7 +49,12 @@ const Groups = () => {
     }
 
     if (myGroups.length === 0) {
-      getUserGroups().then((res) => setMyGroups(res.data.list));
+      getUserGroups()
+        .then((res) => {
+          console.log(res.data);
+          return res;
+        })
+        .then((res) => setMyGroups(res.data.list));
     }
 
     register("name");
@@ -156,7 +165,10 @@ const Groups = () => {
                           {g.course} / {g.group} / {g.subGroup}
                         </TableCell>
                         <TableCell>
-                          <IconButton color={"primary"}>
+                          <IconButton
+                            color={"primary"}
+                            onClick={() => navigate(g.id)}
+                          >
                             <OpenInNewIcon />
                           </IconButton>
                         </TableCell>
