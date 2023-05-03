@@ -22,22 +22,9 @@ type Props = {
 const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
   const [planItem, setPlanItem] = useState<Record<any, any>>({});
 
-  const { register, handleSubmit, setValue } = useForm({
-    defaultValues: {
-      criteria1: {
-        name: planItem?.CriteriaEvaluation?.[0]?.name || "",
-        coefficient: planItem?.CriteriaEvaluation?.[0]?.coefficient || 1,
-      },
-      criteria2: {
-        name: planItem?.CriteriaEvaluation?.[1]?.name || "",
-        coefficient: planItem?.CriteriaEvaluation?.[1]?.coefficient || 1,
-      },
-      criteria3: {
-        name: planItem?.CriteriaEvaluation?.[2]?.name || "",
-        coefficient: planItem?.CriteriaEvaluation?.[2]?.coefficient || 1,
-      },
-    },
-  });
+  const { register, handleSubmit, watch, setValue } = useForm({});
+
+  const watched = watch();
 
   const sendNewCriteriaInfo = (
     data: { [s: string]: unknown } | ArrayLike<unknown>
@@ -50,15 +37,30 @@ const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
 
   useEffect(() => {
     if (open && planItemId) {
-      getPlanDataById(planItemId).then((res) => setPlanItem(res.data.planItem));
+      getPlanDataById(planItemId).then((res) => {
+        setPlanItem(res.data.planItem);
+        // eslint-disable-next-line no-console
+        console.log(res);
+        register("criteria1.name", {
+          value: planItem.CriteriaEvaluation?.[0]?.name || "",
+        });
+        register("criteria1.coefficient", {
+          value: planItem.CriteriaEvaluation?.[0]?.coefficient || 1,
+        });
+        register("criteria2.name", {
+          value: planItem.CriteriaEvaluation?.[1]?.name || "",
+        });
+        register("criteria2.coefficient", {
+          value: planItem.CriteriaEvaluation?.[1]?.coefficient || 1,
+        });
+        register("criteria3.name", {
+          value: planItem.CriteriaEvaluation?.[2]?.name || "",
+        });
+        register("criteria3.coefficient", {
+          value: planItem.CriteriaEvaluation?.[2]?.coefficient || 1,
+        });
+      });
     }
-
-    register("criteria1.name");
-    register("criteria1.coefficient");
-    register("criteria2.name");
-    register("criteria2.coefficient");
-    register("criteria3.name");
-    register("criteria3.coefficient");
   }, [planItemId]);
 
   return (
@@ -73,11 +75,7 @@ const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
             <TextField
               label={"Название"}
               onChange={(e) => setValue("criteria1.name", e.target.value)}
-              defaultValue={
-                planItem?.CriteriaEvaluation?.length > 0
-                  ? planItem?.CriteriaEvaluation?.[0].name
-                  : null
-              }
+              defaultValue={watched.criteria1.name}
             />
 
             <FormControl>
@@ -86,11 +84,7 @@ const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
               </FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={
-                  planItem?.CriteriaEvaluation?.length > 0
-                    ? planItem?.CriteriaEvaluation?.[0].coefficient
-                    : 1
-                }
+                defaultValue={watched.criteria1.coefficient}
                 onChange={(e) =>
                   setValue("criteria1.coefficient", +e.target.value)
                 }
@@ -111,11 +105,7 @@ const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
             <TextField
               label={"Название"}
               onChange={(e) => setValue("criteria2.name", e.target.value)}
-              defaultValue={
-                planItem?.CriteriaEvaluation?.length > 1
-                  ? planItem?.CriteriaEvaluation?.[1].name
-                  : ""
-              }
+              defaultValue={watched.criteria2.name}
             />
 
             <FormControl>
@@ -127,11 +117,7 @@ const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
                 onChange={(e) =>
                   setValue("criteria2.coefficient", +e.target.value)
                 }
-                defaultValue={
-                  planItem?.CriteriaEvaluation?.length > 1
-                    ? planItem?.CriteriaEvaluation?.[1].coefficient
-                    : 1
-                }
+                defaultValue={watched.criteria2.coefficient}
                 name="radio-buttons-group"
                 row
               >
@@ -149,11 +135,7 @@ const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
             <TextField
               label={"Название"}
               onChange={(e) => setValue("criteria3.name", e.target.value)}
-              defaultValue={
-                planItem?.CriteriaEvaluation?.length > 1
-                  ? planItem?.CriteriaEvaluation?.[2].name
-                  : ""
-              }
+              defaultValue={watched.criteria3.name}
             />
 
             <FormControl>
@@ -165,11 +147,7 @@ const CriteriaSettingsForm = ({ planItemId, open }: Props) => {
                 onChange={(e) =>
                   setValue("criteria3.coefficient", +e.target.value)
                 }
-                defaultValue={
-                  planItem?.CriteriaEvaluation?.length > 1
-                    ? planItem?.CriteriaEvaluation?.[2].coefficient
-                    : 1
-                }
+                defaultValue={watched.criteria3.coefficient}
                 name="radio-buttons-group"
                 row
               >

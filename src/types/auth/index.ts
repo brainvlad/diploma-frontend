@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Request {
   export interface Login {
     email: string;
@@ -5,6 +6,7 @@ export namespace Request {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Response {
   export interface Login {
     access: string;

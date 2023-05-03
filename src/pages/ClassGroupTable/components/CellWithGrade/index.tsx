@@ -51,7 +51,6 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
           backgroundColor: criterias.length > 0 ? "#fff" : blueGrey[50],
         }}
         onDoubleClick={() => {
-          console.log({ criterias, grade });
           if (!openForm && criterias.length > 0) {
             setOpenForm(!openForm);
           } else {

@@ -5,6 +5,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+  Button,
   Container,
   Divider,
   IconButton,
@@ -21,6 +22,8 @@ import SettingsBar from "./components/SettingsBar";
 import StudyPlanList from "./components/StudyPlanList";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
+import NewClassForm from "./components/NewClassForm";
+import Dialog from "../../components/Dialog";
 
 const Groups = () => {
   const [subjects, setSubjects] = useState<Array<any>>([]);
@@ -28,6 +31,9 @@ const Groups = () => {
 
   const [expanded, setExpanded] = useState<string | false>(false);
   const [showStudyPlan, setShowStudyPlan] = useState<boolean>(false);
+  const [createNewClassOpen, setCreateNewClassOpen] = useState<string | null>(
+    null
+  );
 
   const navigate = useNavigate();
 
@@ -57,8 +63,8 @@ const Groups = () => {
                       setClasses(res.data.list)
                     )
                   }
-                  onChange={handleChange(subject.name)}
-                  expanded={expanded === subject.name}
+                  onChange={handleChange(subject.id)}
+                  expanded={expanded === subject.id}
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -70,23 +76,49 @@ const Groups = () => {
                   <AccordionDetails>
                     <Stack spacing={2}>
                       <Stack
-                        spacing={1}
+                        spacing={2}
                         direction={"row"}
                         alignItems={"center"}
+                        justifyContent={"space-between"}
                       >
-                        <Link
-                          href={"#"}
-                          onClick={() => setShowStudyPlan(!showStudyPlan)}
-                        >
-                          <Typography>Учебный план</Typography>
-                        </Link>
-                        <IconButton
+                        <Button
                           onClick={() =>
                             navigate(`/subjects/${subject.id}/study-plan`)
                           }
+                          endIcon={<OpenInNewIcon />}
                         >
-                          <OpenInNewIcon />
-                        </IconButton>
+                          Учебный план
+                        </Button>
+                        <Dialog
+                          open={createNewClassOpen === subject.id}
+                          handleClose={() => setCreateNewClassOpen(null)}
+                          showAction={false}
+                          title={"Создать новый класс"}
+                          contentText={
+                            "Выберите группу, с которой будет создан класс"
+                          }
+                          handleSubmit={function (): void {
+                            throw new Error("Function not implemented.");
+                          }}
+                        >
+                          <NewClassForm
+                            subjectId={subject.id}
+                            subjectName={subject.name}
+                            open={createNewClassOpen === subject.id}
+                            callBack={() => {
+                              setCreateNewClassOpen(null);
+                              getGroupsBySubjects(subject.id).then((res) =>
+                                setClasses(res.data.list)
+                              );
+                            }}
+                          />
+                        </Dialog>
+                        <Button
+                          variant={"contained"}
+                          onClick={() => setCreateNewClassOpen(subject.id)}
+                        >
+                          Создать новый класс
+                        </Button>
                       </Stack>
                       <div style={{ margin: "10px 0" }}>
                         {showStudyPlan ? (

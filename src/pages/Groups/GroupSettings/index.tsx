@@ -31,11 +31,11 @@ const GroupSettings = () => {
   const [createStudentForm, setCreateStudentForm] = useState(false);
   const [editStudent, setEditStudent] = useState("");
 
-  const [state, run] = useAsyncFn(async (groupId) => {
-    const studentList = await getAllStudentsByGroup(groupId).then(
+  const [state, run] = useAsyncFn(async (gId) => {
+    const studentList = await getAllStudentsByGroup(gId).then(
       (res) => res.data
     );
-    const groupInfo = await getGroupById(groupId).then((res) => res.data);
+    const groupInfo = await getGroupById(groupId!).then((res) => res.data);
 
     setGroupName(`${groupInfo.group} - ${groupInfo.subGroup}`);
 
@@ -100,8 +100,8 @@ const GroupSettings = () => {
                 ? state.value?.studentList
                     .sort(
                       (a: { firstName: string }, b: { firstName: string }) =>
-                        a?.firstName[0]?.codePointAt(0) -
-                        b?.firstName[0]?.codePointAt(0)
+                        a?.firstName[0]?.codePointAt(0)! -
+                        b?.firstName[0]?.codePointAt(0)!
                     )
                     .map((st: any, index: number) => (
                       <TableRow>

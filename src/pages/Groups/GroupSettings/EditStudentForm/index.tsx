@@ -13,8 +13,8 @@ const EditStudentForm = ({ studentId, callBack }: Props) => {
   const { register, setValue, handleSubmit, watch } = useForm();
 
   const [state, run] = useAsyncFn(
-    async (studentId: string) => {
-      const res = await getStudentById(studentId);
+    async (sId: string) => {
+      const res = await getStudentById(sId);
 
       const data = res.data;
       setValue("firstName", data.firstName);
@@ -66,6 +66,8 @@ const EditStudentForm = ({ studentId, callBack }: Props) => {
         </Button>
       </Stack>
     );
+
+  return <div>Not</div>;
 };
 
 export default EditStudentForm;

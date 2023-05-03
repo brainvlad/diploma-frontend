@@ -128,8 +128,8 @@ function ResponsiveAppBar({ userName }: Props) {
               ))}
             </Menu>
           </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} >
-              <Logo />
+          <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
+            <Logo />
           </Box>
           <Typography
             variant="h5"

@@ -51,7 +51,6 @@ const Groups = () => {
     if (myGroups.length === 0) {
       getUserGroups()
         .then((res) => {
-          console.log(res.data);
           return res;
         })
         .then((res) => setMyGroups(res.data.list));
@@ -66,7 +65,7 @@ const Groups = () => {
   const sendRequestForCreateNewGroup = (data: any) =>
     createNewGroup(data).then((res) => {
       if (res.status >= 200 && res.status < 400) {
-        getAllGroups().then((res) => setGroups(res.data.list));
+        getAllGroups().then((r) => setGroups(r.data.list));
       }
     });
 
