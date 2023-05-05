@@ -23,19 +23,32 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
   );
   const gradesTable: Record<string, number> =
     grade !== null
-      ? Object.fromEntries(
-          Object.keys(grade).map((key) => [
-            grade[key].criteria.id,
-            grade[key].value,
-          ])
-        )
+      ? {
+          ...Object.fromEntries(
+            Object.keys(grade).map((key) => {
+              return [grade[key].criteria.id, grade[key].value];
+            })
+          ),
+          ...Object.fromEntries(
+            Object.keys(grade).map((key) => {
+              return ["done", grade[key].done];
+            })
+          ),
+          ...Object.fromEntries(
+            Object.keys(grade).map((key) => {
+              return ["comment", grade[key].comment];
+            })
+          ),
+        }
       : {};
 
   const calculatedGrade = (function () {
     let t = 0;
-    Object.keys(gradesTable).forEach((key) => {
-      t += (criteriaTable[key] * gradesTable[key]) / sumCoefficients;
-    });
+    Object.keys(gradesTable)
+      .filter((key) => !["done", "comment"].includes(key))
+      .forEach((key) => {
+        t += (criteriaTable[key] * gradesTable[key]) / sumCoefficients;
+      });
     return t;
   })();
 
@@ -71,7 +84,7 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
                 : "red"
             }
           >
-            {grade === null ? 0 : calculatedGrade}
+            {grade === null ? 0 : calculatedGrade.toFixed(2)}
           </Typography>
         </Tooltip>
         <Dialog
@@ -86,6 +99,8 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
             criteria={criterias}
             studentId={studentId}
             planItemId={planItemId}
+            gradeTable={gradesTable}
+            totalGradeStarted={grade === null ? 0 : +calculatedGrade.toFixed(2)}
           />
         </Dialog>
       </TableCell>

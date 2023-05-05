@@ -1,103 +1,158 @@
 import React, { useEffect, useState } from "react";
 import { getStudyPlan } from "../../http/subjects";
 import {
+  Breadcrumbs,
   Button,
   Container,
-  Grid,
   IconButton,
+  Link,
   Paper,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
-  TextField,
   Typography,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
-import CriteriaSettingsForm from "./CriteriaSettingsForm";
 import Dialog from "../../components/Dialog";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
+import { useAsyncFn } from "react-use";
+import CriteriaCreateForm from "./CriteriaCreateForm";
+import { removeItem } from "../../http/study-plan";
 
 const StudyPlanSettings = () => {
   const { subjectId } = useParams();
   const [plan, setPlan] = useState<any[]>([]);
-  const [openCriteria, setOpenCriteria] = useState("");
+  const [openCriteriaId, setOpenCriteriaId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [createNewItem, setCreateNewItem] = useState(false);
+
+  const [state, run] = useAsyncFn(async (sId) => {
+    const res = await getStudyPlan(sId);
+
+    return {
+      items: res.data.plan.sort(
+        (a: { order: number }, b: { order: number }) => a.order - b.order
+      ),
+      subject: res.data.subject,
+    };
+  });
 
   useEffect(() => {
     if (subjectId) {
-      getStudyPlan(subjectId).then((res) =>
-        setPlan(
-          res.data.plan.sort(
-            (a: { order: number }, b: { order: number }) => a.order - b.order
-          )
-        )
-      );
+      run(subjectId);
     }
   }, [subjectId]);
 
-  return (
-    <Container>
-      <TableContainer component={Paper}>
-        <Table size={"small"}>
-          <TableHead>
-            <TableRow>
-              <TableCell>№</TableCell>
-              <TableCell>Тема</TableCell>
-              <TableCell>Действия</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {plan.length
-              ? plan.map((p) => (
-                  <TableRow>
-                    <TableCell sx={{ width: 20 }}>{p.order}</TableCell>
-                    <TableCell>{p.topic}</TableCell>
-                    <TableCell align={"right"} sx={{ width: 300 }}>
-                      <Stack
-                        direction={"row"}
-                        spacing={1}
-                        alignItems={"center"}
-                      >
-                        <Button
-                          variant={"outlined"}
-                          onClick={() => setOpenCriteria(p.id)}
-                        >
-                          Критерии оценки
-                        </Button>
+  if (!state.loading && !state.error)
+    return (
+      <Container>
+        <Stack spacing={2}>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Breadcrumbs>
+              <Link underline="hover" color="inherit" href={"/subjects"}>
+                <Typography>Мои предметы</Typography>
+              </Link>
+              <Typography color={"text.primary"}>
+                {state.value?.subject?.name}
+              </Typography>
+            </Breadcrumbs>
 
+            <Dialog
+              open={createNewItem}
+              handleClose={() => setCreateNewItem(false)}
+              title={"Добавить тему"}
+              contentText={"Заполните данные новой темы"}
+              handleSubmit={() => setCreateNewItem(false)}
+              showAction={false}
+            >
+              <CriteriaCreateForm
+                planItemId={null}
+                open={createNewItem}
+                callback={() => {
+                  run(subjectId);
+                  setCreateNewItem(false);
+                }}
+                subjectId={subjectId}
+              />
+            </Dialog>
+            <Button
+              variant={"contained"}
+              onClick={() => setCreateNewItem(true)}
+            >
+              Добавить
+            </Button>
+          </Stack>
+
+          <TableContainer component={Paper}>
+            <Table size={"small"}>
+              <TableBody>
+                {state.value?.items?.map((p: any) => (
+                  <TableRow>
+                    <TableCell>
+                      {p.order} {p.topic}
+                    </TableCell>
+                    <TableCell sx={{ width: 150 }}>
+                      <Stack direction={"row"}>
                         <Dialog
-                          open={openCriteria === p.id}
-                          handleClose={() => setOpenCriteria("")}
-                          title={"Критерии"}
-                          contentText={"Текст"}
-                          handleSubmit={() => setOpenCriteria("")}
+                          open={openCriteriaId === p.id}
+                          handleClose={() => setOpenCriteriaId(null)}
+                          title={`Тема: ${p.topic}`}
+                          contentText={
+                            "Настройка критерив оценки выполнения задания"
+                          }
+                          handleSubmit={() => {
+                            setCreateNewItem(false);
+                          }}
                           showAction={false}
                         >
-                          <CriteriaSettingsForm
+                          <CriteriaCreateForm
                             planItemId={p.id}
-                            open={openCriteria === p.id}
+                            open={openCriteriaId === p.id}
+                            callback={() => {
+                              setOpenCriteriaId(null);
+                              run(subjectId);
+                            }}
                           />
                         </Dialog>
-
-                        <IconButton>
+                        <ConfirmationDialog
+                          handleClose={() => setDeleteConfirm(p.id)}
+                          handleAgree={() =>
+                            removeItem(p.id).then(() => run(subjectId))
+                          }
+                          open={deleteConfirm === p.id}
+                          content={`Вы удалите информацию о теме ${p.order} - ${p.topic}. Данные оценок студентов по данной теме также будут удалены.`}
+                          title={"Вы уверены?"}
+                        />
+                        <IconButton
+                          color={"primary"}
+                          onClick={() => {
+                            setOpenCriteriaId(p.id);
+                          }}
+                        >
                           <EditIcon />
                         </IconButton>
-                        <IconButton color={"error"}>
+                        <IconButton
+                          color={"error"}
+                          onClick={() => setDeleteConfirm(p.id)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </Stack>
                     </TableCell>
                   </TableRow>
-                ))
-              : null}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
-  );
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Stack>
+      </Container>
+    );
+
+  return <h1>no data</h1>;
 };
 
 export default StudyPlanSettings;

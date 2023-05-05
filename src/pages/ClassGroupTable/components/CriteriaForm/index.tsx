@@ -11,31 +11,44 @@ import {
   Typography,
   Button,
   TextareaAutosize,
+  Checkbox,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { setStudentGrade } from "../../../../http/classes";
+import { useAsyncFn } from "react-use";
 
 type Props = {
   criteria: Array<any>;
+  totalGradeStarted: number;
   studentId: string;
   planItemId: string;
+  gradeTable: any;
 };
 
-const CriteriaSettingsForm = ({ criteria, studentId }: Props) => {
-  const [totalGrade, setTotalGrade] = useState(0);
+const CriteriaSettingsForm = ({
+  criteria,
+  studentId,
+  gradeTable,
+  totalGradeStarted,
+}: Props) => {
+  const [totalGrade, setTotalGrade] = useState(totalGradeStarted);
   const [criteriaTable, setCriteriaTable] = useState<Record<string, number>>(
     {}
   );
-  const [inputCriteria, setInputCriteria] = useState<Record<string, number>>(
-    {}
-  );
+  const [inputCriteria, setInputCriteria] = useState<Record<string, number>>({
+    ...Object.fromEntries(
+      Object.keys(gradeTable)
+        .filter((key) => !["done", "comment"].includes(key))
+        .map((key) => [key, gradeTable[key]])
+    ),
+  });
 
   const { register, setValue, handleSubmit } = useForm();
 
   const sendRequestForSetStudentGrade = async (data: any) => {
     const grades: any[] = [];
     Object.keys(data).map((key) => {
-      if (key !== "comment") {
+      if (!["comment", "done"].includes(key)) {
         grades.push(
           Object.fromEntries([
             ["criteriaEvalutationId", key],
@@ -45,7 +58,7 @@ const CriteriaSettingsForm = ({ criteria, studentId }: Props) => {
         );
       }
     });
-    await setStudentGrade({ grades });
+    await setStudentGrade({ grades, done: data.done, comment: data.comment });
   };
 
   useEffect(() => {
@@ -58,9 +71,11 @@ const CriteriaSettingsForm = ({ criteria, studentId }: Props) => {
       setCriteriaTable(Object.fromEntries(table));
 
       criteria.forEach((c) => {
-        register(c.id);
+        register(c.id, { value: 0 || gradeTable[c.id] });
       });
-      register("comment");
+
+      register("comment", { value: gradeTable.comment });
+      register("done", { value: gradeTable.done });
     }
   }, []);
 
@@ -80,11 +95,21 @@ const CriteriaSettingsForm = ({ criteria, studentId }: Props) => {
               label={"Процент выполнения"}
               inputProps={{ max: 100, min: 0 }}
               size={"small"}
-              defaultValue={0}
+              defaultValue={(function () {
+                if (gradeTable[c.id] > 0) {
+                  return gradeTable[c.id];
+                } else {
+                  return 0;
+                }
+              })()}
               onChange={(e) => {
+                if (+e.target.value > 100) {
+                  e.target.value = String(100);
+                }
+
                 const inputTable: Record<string, number> = {
                   ...inputCriteria,
-                  [c.id]: +e.target.value,
+                  [c.id]: gradeTable[c.id] || +e.target.value,
                 };
                 setInputCriteria(inputTable);
 
@@ -110,6 +135,16 @@ const CriteriaSettingsForm = ({ criteria, studentId }: Props) => {
           fullWidth
           rows={4}
           onChange={(e) => setValue("comment", e.target.value || "")}
+          defaultValue={gradeTable.comment || ""}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(e) => setValue("done", e.target.checked)}
+              checked={gradeTable.done || false}
+            />
+          }
+          label="Сдано"
         />
         <Stack
           direction={"row"}
@@ -118,7 +153,7 @@ const CriteriaSettingsForm = ({ criteria, studentId }: Props) => {
         >
           <Typography variant={"h6"}>Итоговая оценка:</Typography>
           <Typography variant={"h5"} color={totalGrade < 40 ? "red" : "green"}>
-            {totalGrade}
+            {totalGrade.toFixed(2)}
           </Typography>
         </Stack>
         <Button

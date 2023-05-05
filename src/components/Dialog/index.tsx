@@ -15,6 +15,8 @@ type Props = {
   handleSubmit: () => void;
   children: JSX.Element;
   showAction: boolean;
+  width?: number;
+  height?: number;
 };
 
 export default function FormDialog({
@@ -25,6 +27,8 @@ export default function FormDialog({
   handleSubmit,
   showAction,
   children,
+  width,
+  height,
 }: Props) {
   return (
     <div>
