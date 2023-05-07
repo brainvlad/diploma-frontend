@@ -141,7 +141,7 @@ const CriteriaSettingsForm = ({
           control={
             <Checkbox
               onChange={(e) => setValue("done", e.target.checked)}
-              checked={gradeTable.done || false}
+              defaultChecked={gradeTable.done || false}
             />
           }
           label="Сдано"
