@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TableCell, Tooltip, Typography } from "@mui/material";
-import { blueGrey } from "@mui/material/colors";
+import { blueGrey, lightGreen } from "@mui/material/colors";
 import CriteriaSettingsForm from "../CriteriaForm";
 import Dialog from "../../../../components/Dialog";
 
@@ -62,6 +62,7 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
           },
           border: "1px solid #cccccc",
           backgroundColor: criterias.length > 0 ? "#fff" : blueGrey[50],
+          ...(gradesTable["done"] ? { backgroundColor: lightGreen[100] } : {}),
         }}
         style={{ width: 50 }}
         onDoubleClick={() => {

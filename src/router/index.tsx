@@ -16,6 +16,8 @@ const StudyPlanSettingsPage = lazy(() => import("../pages/StudyPlanSettings"));
 const GroupsPage = lazy(() => import("../pages/Groups"));
 const GroupsSettingsPage = lazy(() => import("../pages/Groups/GroupSettings"));
 
+const ViewStatisticsPage = lazy(() => import("../pages/ViewStatistics"));
+
 const AppRouter = (): JSX.Element => {
   const classes = useStyles();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -88,6 +90,9 @@ const AppRouter = (): JSX.Element => {
 
         <Route path="auth/login" element={<AuthPage />} />
         {/*<Route path="auth/register" element={<RegisterPage />} />*/}
+      </Routes>
+      <Routes>
+        <Route path={"group-statistics/:id"} element={<ViewStatisticsPage />} />
       </Routes>
     </Suspense>
   );

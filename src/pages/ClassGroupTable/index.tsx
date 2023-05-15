@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import {
+  Button,
   Paper,
   Stack,
   Table,
@@ -15,6 +16,8 @@ import {
 import { useParams } from "react-router-dom";
 import { getGradesTableByClass } from "../../http/classes";
 import CellWithGrade from "./components/CellWithGrade";
+import Dialog from "../../components/Dialog";
+import CreateStatisticsForm from "./components/CreateStatisticsForm";
 
 const ClassGroupTable = () => {
   const { classId } = useParams();
@@ -22,6 +25,7 @@ const ClassGroupTable = () => {
   const [groupName, setGroupName] = useState<string>("");
   const [table, setTable] = useState<Array<any>>([]);
   const [plan, setPlan] = useState<Array<any>>([]);
+  const [statistics, setStatistics] = useState(false);
 
   useEffect(() => {
     if (classId) {
@@ -47,6 +51,32 @@ const ClassGroupTable = () => {
             <Typography variant={"caption"}>Группа: {groupName}</Typography>
           </Stack>
         </Paper>
+
+        <Stack direction={"row"} justifyContent={"space-between"}>
+          <Button
+            variant={"contained"}
+            onClick={() => setStatistics(!statistics)}
+          >
+            Посмотреть статистику
+          </Button>
+          <Dialog
+            open={statistics}
+            handleClose={() => setStatistics(!statistics)}
+            title={"Посмотреть статистику"}
+            contentText={""}
+            handleSubmit={() => setStatistics(!statistics)}
+            showAction={false}
+          >
+            <CreateStatisticsForm
+              studyPlan={plan.map((p) => ({
+                id: p.id,
+                topic: p.topic,
+                order: p.order,
+              }))}
+              classId={classId!}
+            />
+          </Dialog>
+        </Stack>
         <TableContainer component={Paper}>
           <Table size={"small"}>
             <TableHead>

@@ -153,7 +153,6 @@ const Groups = () => {
                       <TableCell>Имя</TableCell>
                       <TableCell>Курс/Группа/Подгруппа</TableCell>
                       <TableCell>Настройка</TableCell>
-                      <TableCell>Разрешить</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -169,11 +168,6 @@ const Groups = () => {
                             onClick={() => navigate(g.id)}
                           >
                             <OpenInNewIcon />
-                          </IconButton>
-                        </TableCell>
-                        <TableCell>
-                          <IconButton color={"primary"}>
-                            <ShareIcon />
                           </IconButton>
                         </TableCell>
                       </TableRow>

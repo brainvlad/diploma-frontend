@@ -71,7 +71,11 @@ const CriteriaSettingsForm = ({
       setCriteriaTable(Object.fromEntries(table));
 
       criteria.forEach((c) => {
-        register(c.id, { value: 0 || gradeTable[c.id] });
+        if (c.name !== "NO_NAME") {
+          register(c.id, { value: 0 || gradeTable[c.id] });
+        } else {
+          register(c.id, { value: 100 });
+        }
       });
 
       register("comment", { value: gradeTable.comment });
@@ -82,53 +86,55 @@ const CriteriaSettingsForm = ({
   return (
     <div>
       <Stack spacing={2} width={500}>
-        {criteria.map((c) => (
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-          >
-            <Typography>{c.name}</Typography>
+        {criteria
+          .filter((c) => c.name !== "NO_NAME")
+          .map((c) => (
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Typography>{c.name}</Typography>
 
-            <TextField
-              type={"number"}
-              label={"Процент выполнения"}
-              inputProps={{ max: 100, min: 0 }}
-              size={"small"}
-              defaultValue={(function () {
-                if (gradeTable[c.id] > 0) {
-                  return gradeTable[c.id];
-                } else {
-                  return 0;
-                }
-              })()}
-              onChange={(e) => {
-                if (+e.target.value > 100) {
-                  e.target.value = String(100);
-                }
+              <TextField
+                type={"number"}
+                label={"Процент выполнения"}
+                inputProps={{ max: 100, min: 0 }}
+                size={"small"}
+                defaultValue={(function () {
+                  if (gradeTable[c.id] > 0) {
+                    return gradeTable[c.id];
+                  } else {
+                    return 0;
+                  }
+                })()}
+                onChange={(e) => {
+                  if (+e.target.value > 100) {
+                    e.target.value = String(100);
+                  }
 
-                const inputTable: Record<string, number> = {
-                  ...inputCriteria,
-                  [c.id]: gradeTable[c.id] || +e.target.value,
-                };
-                setInputCriteria(inputTable);
+                  const inputTable: Record<string, number> = {
+                    ...inputCriteria,
+                    [c.id]: +e.target.value,
+                  };
+                  setInputCriteria(inputTable);
 
-                const sum = Object.values(criteriaTable).reduce(
-                  (a, b) => a + b,
-                  0
-                );
+                  const sum = Object.values(criteriaTable).reduce(
+                    (a, b) => a + b,
+                    0
+                  );
 
-                let t = 0;
-                Object.keys(criteriaTable).forEach((key) => {
-                  t = t + (criteriaTable[key] * (inputTable[key] || 0)) / sum;
-                });
-                setTotalGrade(t);
-                t = 0;
-                setValue(c.id, +e.target.value);
-              }}
-            />
-          </Stack>
-        ))}
+                  let t = 0;
+                  Object.keys(criteriaTable).forEach((key) => {
+                    t = t + (criteriaTable[key] * (inputTable[key] || 0)) / sum;
+                  });
+                  setTotalGrade(t);
+                  t = 0;
+                  setValue(c.id, +e.target.value);
+                }}
+              />
+            </Stack>
+          ))}
         <TextField
           multiline
           label={"Комментарий"}
