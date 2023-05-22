@@ -1,9 +1,9 @@
-import * as React from "react";
-import TextField from "@mui/material/TextField";
-import Dialog from "../../../../components/Dialog";
-import { Stack } from "@mui/material";
-import { useState } from "react";
-import { createSubject } from "../../../../http/subjects";
+import * as React from 'react';
+import TextField from '@mui/material/TextField';
+import Dialog from '../../../../components/Dialog';
+import { Stack } from '@mui/material';
+import { useState } from 'react';
+import { createSubject } from '../../../../http/subjects';
 
 type Props = {
   open: boolean;
@@ -20,17 +20,17 @@ export default function CreateSubjectForm({ open, handleOpen }: Props) {
     <Dialog
       open={open}
       handleClose={() => handleOpen()}
-      title={"Создать новый предмет"}
-      contentText={"Введите название предмета и алиас (короткое название)"}
+      title={'Создать новый предмет'}
+      contentText={'Введите название предмета и алиас (короткое название)'}
       handleSubmit={handleSubmit}
       showAction={true}
     >
       <Stack spacing={1}>
         <TextField
-          label={"Название предмета"}
+          label={'Название предмета'}
           onChange={(e) => setName(e.target.value)}
         />
-        <TextField label={"Алиас"} onChange={(e) => setAlias(e.target.value)} />
+        <TextField label={'Алиас'} onChange={(e) => setAlias(e.target.value)} />
       </Stack>
     </Dialog>
   );

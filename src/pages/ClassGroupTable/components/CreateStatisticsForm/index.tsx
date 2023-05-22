@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -8,12 +8,13 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
+  TextField,
   Typography,
-} from "@mui/material";
-import { useAsyncFn } from "react-use";
-import { getStatisticsByGroup } from "../../../../http/statistics";
-import { LoadingButton } from "@mui/lab";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import { useAsyncFn } from 'react-use';
+import { getStatisticsByGroup } from '../../../../http/statistics';
+import { LoadingButton } from '@mui/lab';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   studyPlan: Array<{
@@ -26,6 +27,10 @@ type Props = {
 
 const CreateStatisticsForm = ({ studyPlan, classId }: Props) => {
   const [checkedItem, setCheckedItem] = useState<string[]>([]);
+
+  const [title, setTitle] = useState('Новая статистика');
+  const [comment, setComment] = useState<string | null>(null);
+
   const navigate = useNavigate();
 
   const [state, run] = useAsyncFn(async (data) => {
@@ -39,11 +44,22 @@ const CreateStatisticsForm = ({ studyPlan, classId }: Props) => {
   });
 
   const createSend = async () => {
-    return run({ classId, studyPlanItemIds: checkedItem });
+    return run({ classId, studyPlanItemIds: checkedItem, title, comment });
   };
 
   return (
     <Stack spacing={2}>
+      <TextField
+        label={'Название'}
+        size={'small'}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <TextField
+        label={'Комментарий'}
+        multiline
+        size={'small'}
+        onChange={(e) => setComment(e.target.value)}
+      />
       <List>
         {studyPlan.map((sp) => {
           return (
@@ -75,7 +91,7 @@ const CreateStatisticsForm = ({ studyPlan, classId }: Props) => {
       </List>
       <LoadingButton
         loading={state.loading}
-        variant={"contained"}
+        variant={'contained'}
         onClick={createSend}
       >
         Подсчитать

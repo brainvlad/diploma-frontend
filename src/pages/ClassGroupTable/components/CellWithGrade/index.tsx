@@ -1,17 +1,27 @@
 import React, { useState } from "react";
-import { TableCell, Tooltip, Typography } from "@mui/material";
+import { Box, TableCell, Tooltip, Typography } from "@mui/material";
+import { CheckCircleOutline as DoneIcon } from "@mui/icons-material";
 import { blueGrey, lightGreen } from "@mui/material/colors";
 import CriteriaSettingsForm from "../CriteriaForm";
 import Dialog from "../../../../components/Dialog";
 
 type Props = {
   grade: any;
+  topic: string;
   studentId: string;
   planItemId: string;
   criterias: any[];
+  studentName: string;
 };
 
-const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
+const CellWithGrade = ({
+  grade,
+  studentId,
+  planItemId,
+  criterias,
+  topic,
+  studentName,
+}: Props) => {
   const [openForm, setOpenForm] = useState(false);
 
   const criteriaTable: Record<string, number> = Object.fromEntries(
@@ -62,9 +72,9 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
           },
           border: "1px solid #cccccc",
           backgroundColor: criterias.length > 0 ? "#fff" : blueGrey[50],
-          ...(gradesTable["done"] ? { backgroundColor: lightGreen[100] } : {}),
+          ...(gradesTable.done ? { backgroundColor: lightGreen[100] } : {}),
+          minWidth: "40px",
         }}
-        style={{ width: 50 }}
         onDoubleClick={() => {
           if (!openForm && criterias.length > 0) {
             setOpenForm(!openForm);
@@ -80,13 +90,29 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
           <Typography
             color={
               calculatedGrade > 40 && calculatedGrade > 0
-                ? "green"
+                ? "#185319"
                 : calculatedGrade === 0
                 ? "none"
                 : "red"
             }
           >
-            {grade === null ? 0 : calculatedGrade.toFixed(2)}
+            {grade === null ? (
+              0
+            ) : criterias.filter((c) => c.name != "NO_NAME").length > 0 ? (
+              calculatedGrade.toFixed(2)
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Tooltip title={"Сдано (без оценки)"}>
+                  <DoneIcon color={"success"} />
+                </Tooltip>
+              </Box>
+            )}
           </Typography>
         </Tooltip>
         <Dialog
@@ -103,6 +129,8 @@ const CellWithGrade = ({ grade, studentId, planItemId, criterias }: Props) => {
             planItemId={planItemId}
             gradeTable={gradesTable}
             totalGradeStarted={grade === null ? 0 : +calculatedGrade.toFixed(2)}
+            topic={topic}
+            studentName={studentName}
           />
         </Dialog>
       </TableCell>

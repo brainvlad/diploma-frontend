@@ -11,6 +11,7 @@ import {
   Container,
   Button,
   Grid,
+  useMediaQuery,
 } from "@mui/material";
 import { useAsyncFn } from "react-use";
 import {
@@ -32,8 +33,11 @@ const CriteriaCreateForm = ({
   callback,
   subjectId,
 }: Props) => {
+  const isDesktop = useMediaQuery("(min-width:600px)");
   const [topicName, setTopicName] = useState("");
   const [order, setOrder] = useState(1);
+
+  const [description, setDescription] = useState<string | null>(null);
 
   const [criterias, setCriterias] = useState<any>([
     { name: "", coefficient: 1 },
@@ -54,12 +58,14 @@ const CriteriaCreateForm = ({
       }),
       topic: res.data.planItem.topic,
       order: res.data.planItem.order,
+      description: res.data.planItem.description,
       id: res.data.planItem.id,
     };
 
     setCriterias(data.items);
     setTopicName(data.topic);
     setOrder(data.order);
+    setDescription(res.data.planItem.description);
 
     return data;
   });
@@ -90,25 +96,31 @@ const CriteriaCreateForm = ({
       studyPlanItemId: planItemId,
       topic: topicName,
       order: order,
+      description,
     });
     run(planItemId);
     callback();
   };
 
   const createNewItemData = async () => {
+    console.log({ description });
     if (subjectId) {
-      await addNewItemStudyPlan({ subjectId, topic: topicName, order }).then(
-        (res) => {
-          createNewCriteria({
-            criteria: criterias.filter((c: any) => !!c.name),
-            studyPlanItemId: res.data.id,
-            topic: topicName,
-            order: order,
-          });
-          run(planItemId);
-          callback();
-        }
-      );
+      await addNewItemStudyPlan({
+        subjectId,
+        topic: topicName,
+        order,
+        description: description || "",
+      }).then((res) => {
+        createNewCriteria({
+          criteria: criterias.filter((c: any) => !!c.name),
+          studyPlanItemId: res.data.id,
+          topic: topicName,
+          description,
+          order: order,
+        });
+        run(planItemId);
+        callback();
+      });
     }
   };
 
@@ -130,20 +142,35 @@ const CriteriaCreateForm = ({
               label={"Номер"}
               inputProps={{
                 type: "number",
-                min: 1,
+                min: order + 1,
               }}
               onChange={(e) => setOrder(+e.target.value)}
               size={"small"}
-              fullWidth
+              fullWidth={isDesktop}
               defaultValue={order}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label={"Описание темы"}
+              size={"small"}
+              multiline
+              fullWidth
+              rows={3}
+              defaultValue={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </Grid>
         </Grid>
         {[0, 1, 2].map((i) => (
-          <Stack direction={"row"} spacing={2}>
+          <Stack direction={isDesktop ? "row" : "column"} spacing={2}>
             <TextField
               label={"Название"}
-              defaultValue={state.value?.items[i]?.name || ""}
+              defaultValue={
+                state.value?.items[i]?.name !== "NO_NAME"
+                  ? state.value?.items[i]?.name
+                  : ""
+              }
               onChange={(e) => {
                 setCriterias(
                   criterias.map((c: any, index: number) => {
@@ -158,12 +185,16 @@ const CriteriaCreateForm = ({
               variant={"standard"}
             />
 
-            <FormControl>
+            <FormControl size={isDesktop ? "medium" : "small"}>
               <FormLabel id="rate">Коэффициент</FormLabel>
               <RadioGroup
                 row
                 aria-labelledby="rate"
-                defaultValue={state.value?.items[i]?.coefficient || 1}
+                defaultValue={
+                  state.value?.items[i]?.name !== "NO_NAME"
+                    ? state.value?.items[i]?.coefficient
+                    : 1
+                }
                 onChange={(e) => {
                   setCriterias(
                     criterias.map((c: any, index: number) => {

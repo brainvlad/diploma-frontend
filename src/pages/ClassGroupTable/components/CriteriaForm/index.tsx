@@ -12,6 +12,7 @@ import {
   Button,
   TextareaAutosize,
   Checkbox,
+    Box,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { setStudentGrade } from "../../../../http/classes";
@@ -23,6 +24,8 @@ type Props = {
   studentId: string;
   planItemId: string;
   gradeTable: any;
+  topic: string;
+  studentName: string;
 };
 
 const CriteriaSettingsForm = ({
@@ -30,6 +33,8 @@ const CriteriaSettingsForm = ({
   studentId,
   gradeTable,
   totalGradeStarted,
+  studentName,
+  topic,
 }: Props) => {
   const [totalGrade, setTotalGrade] = useState(totalGradeStarted);
   const [criteriaTable, setCriteriaTable] = useState<Record<string, number>>(
@@ -86,6 +91,11 @@ const CriteriaSettingsForm = ({
   return (
     <div>
       <Stack spacing={2} width={500}>
+        <Box>
+          <Typography variant={"h6"}>{topic}</Typography>
+          <Typography variant={"subtitle1"}>{studentName}</Typography>
+        </Box>
+
         {criteria
           .filter((c) => c.name !== "NO_NAME")
           .map((c) => (
@@ -101,6 +111,7 @@ const CriteriaSettingsForm = ({
                 label={"Процент выполнения"}
                 inputProps={{ max: 100, min: 0 }}
                 size={"small"}
+                sx={{ margin: 1 }}
                 defaultValue={(function () {
                   if (gradeTable[c.id] > 0) {
                     return gradeTable[c.id];
@@ -152,16 +163,21 @@ const CriteriaSettingsForm = ({
           }
           label="Сдано"
         />
-        <Stack
-          direction={"row"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-        >
-          <Typography variant={"h6"}>Итоговая оценка:</Typography>
-          <Typography variant={"h5"} color={totalGrade < 40 ? "red" : "green"}>
-            {totalGrade.toFixed(2)}
-          </Typography>
-        </Stack>
+        {criteria.filter((c) => c.name !== "NO_NAME").length > 0 ? (
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Typography variant={"h6"}>Итоговая оценка:</Typography>
+            <Typography
+              variant={"h5"}
+              color={totalGrade < 40 ? "red" : "green"}
+            >
+              {totalGrade.toFixed(2)}
+            </Typography>
+          </Stack>
+        ) : null}
         <Button
           variant={"outlined"}
           onClick={handleSubmit(sendRequestForSetStudentGrade)}

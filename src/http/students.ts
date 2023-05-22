@@ -1,4 +1,4 @@
-import { http } from "./index";
+import { http } from './index';
 
 export const getAllStudentsByGroup = (groupId: string) =>
   http.get(`/students/group/${groupId}`);
@@ -8,7 +8,7 @@ export const addNewStudent = (data: {
   firstName: string;
   middleName: string;
   lastName: string;
-}) => http.post(`/students`, data);
+}) => http.post('/students', data);
 
 export const getStudentById = (id: string) => http.get(`/students/${id}`);
 

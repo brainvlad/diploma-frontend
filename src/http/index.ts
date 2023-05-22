@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig, AxiosError } from "axios";
+import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 
-const baseURL = "http://localhost:8080";
+const baseURL = 'http://localhost:8080';
 
 const http = axios.create({
   baseURL,
@@ -8,7 +8,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
   async (config: any) => {
-    const access = localStorage.getItem("access");
+    const access = localStorage.getItem('access');
     if (access) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -18,7 +18,7 @@ http.interceptors.request.use(
   },
   (error) => {
     Promise.reject(error);
-  }
+  },
 );
 
 http.interceptors.response.use(
@@ -31,22 +31,22 @@ http.interceptors.response.use(
       originalRequest.retry = true;
 
       return http
-        .post("/auth/refresh", {
-          token: localStorage.getItem("refresh"),
+        .post('/auth/refresh', {
+          token: localStorage.getItem('refresh'),
         })
         .then((res) => {
-          localStorage.setItem("access", res.data.token);
+          localStorage.setItem('access', res.data.token);
           http.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
           return http(originalRequest);
         })
         .catch(() => {
-          localStorage.removeItem("access");
-          localStorage.removeItem("refresh");
-          localStorage.removeItem("userData");
+          localStorage.removeItem('access');
+          localStorage.removeItem('refresh');
+          localStorage.removeItem('userData');
         });
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export { http };

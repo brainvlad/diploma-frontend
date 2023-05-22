@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Paper,
   TableBody,
@@ -10,9 +10,9 @@ import {
   Button,
   TextField,
   Stack,
-} from "@mui/material";
-import { getStudyPlan } from "../../../../http/subjects";
-import { addNewItemStudyPlan } from "../../../../http/study-plan";
+} from '@mui/material';
+import { getStudyPlan } from '../../../../http/subjects';
+import { addNewItemStudyPlan } from '../../../../http/study-plan';
 
 type Props = {
   subjectId: string;
@@ -23,7 +23,7 @@ const StudyPlanList = ({ subjectId, open }: Props) => {
   const [plan, setPlan] = useState<Array<any>>([]);
   const [openToCreate, setOpenToCreate] = useState(false);
 
-  const [topic, setTopic] = useState<string>("");
+  const [topic, setTopic] = useState<string>('');
   const [order, setOrder] = useState<number>(+plan?.length + 1);
 
   useEffect(() => {
@@ -52,15 +52,15 @@ const StudyPlanList = ({ subjectId, open }: Props) => {
                   <TableCell>{p.order}</TableCell>
                   <TableCell>{p.topic}</TableCell>
                 </TableRow>
-              ))
+            ))
             : null}
           {openToCreate ? (
             <TableRow>
               <TableCell>
                 <TextField
-                  size={"small"}
-                  label={"Очередь (номер)"}
-                  type={"number"}
+                  size={'small'}
+                  label={'Очередь (номер)'}
+                  type={'number'}
                   inputProps={{
                     min: 1,
                     defaultValue: +plan?.length + 1,
@@ -70,8 +70,8 @@ const StudyPlanList = ({ subjectId, open }: Props) => {
               </TableCell>
               <TableCell>
                 <TextField
-                  size={"small"}
-                  label={"Название темы"}
+                  size={'small'}
+                  label={'Название темы'}
                   onChange={(e) => setTopic(e.target.value)}
                 />
               </TableCell>
@@ -79,18 +79,18 @@ const StudyPlanList = ({ subjectId, open }: Props) => {
           ) : null}
           <TableRow>
             <TableCell>
-              <Stack direction={"row"} spacing={1}>
+              <Stack direction={'row'} spacing={1}>
                 <Button
-                  variant={"text"}
-                  size={"small"}
+                  variant={'text'}
+                  size={'small'}
                   onClick={() => setOpenToCreate(!openToCreate)}
                 >
                   Добавить новую тему
                 </Button>
                 {openToCreate ? (
                   <Button
-                    variant={"contained"}
-                    size={"small"}
+                    variant={'contained'}
+                    size={'small'}
                     onClick={async () => {
                       await handleAddStudyPlanItem();
                       getStudyPlan(subjectId).then((res) => {

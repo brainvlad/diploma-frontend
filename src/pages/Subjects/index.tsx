@@ -12,6 +12,7 @@ import {
   Link,
   Paper,
   Stack,
+  useMediaQuery,
 } from "@mui/material";
 import { OpenInNew as OpenInNewIcon } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ import NewClassForm from "./components/NewClassForm";
 import Dialog from "../../components/Dialog";
 
 const Groups = () => {
+  const isDesktop = useMediaQuery("(min-width:550px)");
   const [subjects, setSubjects] = useState<Array<any>>([]);
   const [classes, setClasses] = useState<any[]>([]);
 
@@ -50,10 +52,18 @@ const Groups = () => {
     <Container>
       <Stack spacing={3}>
         <Box sx={{ padding: 1 }}>
-          <Typography variant={"h3"}>Мои предметы</Typography>
+          <Stack
+            direction={isDesktop ? "row" : "column"}
+            justifyContent={"space-between"}
+            alignItems={isDesktop ? "center" : "start"}
+            spacing={1}
+          >
+            <Typography variant={"h3"}>Мои предметы</Typography>
+
+            <SettingsBar />
+          </Stack>
           <Divider />
         </Box>
-        <SettingsBar />
         <div>
           {!!subjects.length
             ? subjects.map((subject: any) => (
@@ -77,8 +87,8 @@ const Groups = () => {
                     <Stack spacing={2}>
                       <Stack
                         spacing={2}
-                        direction={"row"}
-                        alignItems={"center"}
+                        direction={isDesktop ? "row" : "column"}
+                        alignItems={isDesktop ? "center" : "start"}
                         justifyContent={"space-between"}
                       >
                         <Button
@@ -86,6 +96,7 @@ const Groups = () => {
                             navigate(`/subjects/${subject.id}/study-plan`)
                           }
                           endIcon={<OpenInNewIcon />}
+                          fullWidth={!isDesktop}
                         >
                           Учебный план
                         </Button>
@@ -116,6 +127,7 @@ const Groups = () => {
                         <Button
                           variant={"contained"}
                           onClick={() => setCreateNewClassOpen(subject.id)}
+                          fullWidth={!isDesktop}
                         >
                           Создать новый класс
                         </Button>

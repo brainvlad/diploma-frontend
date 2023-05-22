@@ -57,18 +57,9 @@ function ResponsiveAppBar({ userName }: Props) {
   };
 
   return (
-    <AppBar
-      position="static"
-      sx={
-        {
-          // backgroundColor: grey[400],
-          // color: "#000",
-        }
-      }
-    >
+    <AppBar position="static" color={"default"}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/*<Logo />*/}
           <Typography
             variant="h6"
             noWrap
@@ -82,8 +73,10 @@ function ResponsiveAppBar({ userName }: Props) {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
+              alignItems: "center",
             }}
           >
+            <Logo />
             Е-Кафедра
           </Typography>
 
@@ -119,11 +112,14 @@ function ResponsiveAppBar({ userName }: Props) {
               {pages.map((page) => (
                 <MenuItem
                   key={page.label}
+                  color={"inherit"}
                   onClick={() => {
                     navigate(page.to);
                   }}
                 >
-                  <Typography textAlign="center">{page.label}</Typography>
+                  <Typography textAlign="center" color={"inherit"}>
+                    {page.label}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -149,12 +145,13 @@ function ResponsiveAppBar({ userName }: Props) {
           >
             Е-Кафедра
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 2, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page.label}
                 onClick={() => navigate(page.to)}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: "inherit", display: "block" }}
+                // color={"inherit"}
               >
                 {page.label}
               </Button>

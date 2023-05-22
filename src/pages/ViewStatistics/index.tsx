@@ -19,6 +19,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   CircularProgress,
+  Alert,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 
@@ -90,7 +91,11 @@ const ViewStatistics = () => {
                             </Typography>
                           </AccordionSummary>
                           <AccordionDetails>
-                            <Typography>{t.decription}</Typography>
+                            <Alert severity={"info"}>
+                              <Typography>
+                                {t.description}
+                              </Typography>
+                            </Alert>
                           </AccordionDetails>
                         </Accordion>
                       );

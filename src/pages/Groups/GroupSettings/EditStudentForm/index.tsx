@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useAsyncFn } from "react-use";
-import { getStudentById, updateStudentInfo } from "../../../../http/students";
-import { Button, Stack, TextField } from "@mui/material";
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useAsyncFn } from 'react-use';
+import { getStudentById, updateStudentInfo } from '../../../../http/students';
+import { Button, Stack, TextField } from '@mui/material';
 
 type Props = {
   studentId: string;
@@ -17,24 +17,24 @@ const EditStudentForm = ({ studentId, callBack }: Props) => {
       const res = await getStudentById(sId);
 
       const data = res.data;
-      setValue("firstName", data.firstName);
-      setValue("middleName", data.middleName);
-      setValue("lastName", data.lastName);
+      setValue('firstName', data.firstName);
+      setValue('middleName', data.middleName);
+      setValue('lastName', data.lastName);
 
       return data;
     },
-    [studentId]
+    [studentId],
   );
 
   useEffect(() => {
-    register("firstName");
-    register("middleName");
-    register("lastName");
+    register('firstName');
+    register('middleName');
+    register('lastName');
     run(studentId);
   }, [register, run]);
 
   const sendUpdateRequest = async (data: any) => {
-    if (studentId !== "") {
+    if (studentId !== '') {
       await updateStudentInfo(studentId, data);
       await callBack();
     }
@@ -44,24 +44,24 @@ const EditStudentForm = ({ studentId, callBack }: Props) => {
     return (
       <Stack spacing={2}>
         <TextField
-          label={"Фамилия"}
+          label={'Фамилия'}
           defaultValue={state.value?.firstName}
-          size={"small"}
-          onChange={(e) => setValue("firstName", e.target.value)}
+          size={'small'}
+          onChange={(e) => setValue('firstName', e.target.value)}
         />
         <TextField
-          label={"Имя"}
+          label={'Имя'}
           defaultValue={state.value?.middleName}
-          size={"small"}
-          onChange={(e) => setValue("middleName", e.target.value)}
+          size={'small'}
+          onChange={(e) => setValue('middleName', e.target.value)}
         />
         <TextField
-          label={"Отчество"}
+          label={'Отчество'}
           defaultValue={state.value?.lastName}
-          size={"small"}
-          onChange={(e) => setValue("lastName", e.target.value)}
+          size={'small'}
+          onChange={(e) => setValue('lastName', e.target.value)}
         />
-        <Button variant={"contained"} onClick={handleSubmit(sendUpdateRequest)}>
+        <Button variant={'contained'} onClick={handleSubmit(sendUpdateRequest)}>
           Сохранить
         </Button>
       </Stack>

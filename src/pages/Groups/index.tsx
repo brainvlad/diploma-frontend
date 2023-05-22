@@ -17,6 +17,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Cancel as CancelIcon,
@@ -34,6 +35,7 @@ import GroupSettings from "./GroupSettings";
 import { useNavigate } from "react-router-dom";
 
 const Groups = () => {
+  const isDesktop = useMediaQuery("(min-width:900px)");
   const [groups, setGroups] = useState<any[]>([]);
   const [myGroups, setMyGroups] = useState<any[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
@@ -89,7 +91,7 @@ const Groups = () => {
         </Stack>
         <Divider />
         <Grid container spacing={2}>
-          <Grid item xs={7}>
+          <Grid item xs={isDesktop ? 7 : 12}>
             <Box>
               {groups.length > 0
                 ? Object.keys(_.groupBy(groups, "course")).map((key, index) => (
@@ -140,7 +142,7 @@ const Groups = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={5}>
+          <Grid item xs={isDesktop ? 5 : 12}>
             <Paper sx={{ padding: 1 }}>
               <Typography variant={"h6"} sx={{ margin: 1 }}>
                 Мои группы

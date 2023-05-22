@@ -1,5 +1,5 @@
-import React from "react";
-import { Button } from "@mui/material";
+import React from 'react';
+import { Button } from '@mui/material';
 
 type Props = {
   label: string;
@@ -9,9 +9,9 @@ type Props = {
 const ButtonSubmit: React.FC<Props> = (props: Props) => {
   return (
     <Button
-      color={"primary"}
-      variant={"contained"}
-      type={"submit"}
+      color={'primary'}
+      variant={'contained'}
+      type={'submit'}
       onClick={props.onClick}
     >
       {props.label}

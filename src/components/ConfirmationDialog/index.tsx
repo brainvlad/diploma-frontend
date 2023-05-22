@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,7 @@ import {
   DialogActions,
   DialogContentText,
   Button,
-} from "@mui/material";
+} from '@mui/material';
 
 type Props = {
   handleClose: () => void;

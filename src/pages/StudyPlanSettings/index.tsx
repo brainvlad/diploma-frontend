@@ -14,6 +14,7 @@ import {
   TableContainer,
   TableRow,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
@@ -24,6 +25,7 @@ import CriteriaCreateForm from "./CriteriaCreateForm";
 import { removeItem } from "../../http/study-plan";
 
 const StudyPlanSettings = () => {
+  const isDesktop = useMediaQuery("(min-width: 900px");
   const { subjectId } = useParams();
   const [plan, setPlan] = useState<any[]>([]);
   const [openCriteriaId, setOpenCriteriaId] = useState<string | null>(null);
@@ -51,7 +53,11 @@ const StudyPlanSettings = () => {
     return (
       <Container>
         <Stack spacing={2}>
-          <Stack direction={"row"} justifyContent={"space-between"}>
+          <Stack
+            direction={isDesktop ? "row" : "column"}
+            {...(isDesktop ? {} : { spacing: 1.5 })}
+            justifyContent={isDesktop ? "space-between" : "start"}
+          >
             <Breadcrumbs>
               <Link underline="hover" color="inherit" href={"/subjects"}>
                 <Typography>Мои предметы</Typography>
@@ -82,6 +88,7 @@ const StudyPlanSettings = () => {
             <Button
               variant={"contained"}
               onClick={() => setCreateNewItem(true)}
+              fullWidth={!isDesktop}
             >
               Добавить
             </Button>

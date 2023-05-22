@@ -4,12 +4,18 @@ const Logo = () => {
   return (
     <div
       style={{
-        transform: "scale(0.5)",
+        transform: "scale(0.45)",
+        padding: 0,
+        margin: 0,
+        // width: "60px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <svg
-        width="97"
-        height="97"
+        width="60"
+        height="60"
         viewBox="0 0 97 97"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
