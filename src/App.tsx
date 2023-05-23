@@ -10,7 +10,7 @@ function App() {
   return (
     <div
       style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        // backgroundColor: 'rgba(255, 255, 255, 0.85)',
         width: '100%',
         height: '100vh',
       }}

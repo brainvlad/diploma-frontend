@@ -4,6 +4,13 @@ export namespace Request {
     email: string;
     password: string;
   }
+
+  export interface Register {
+    firstName: string;
+    middleName: string;
+    lastName?: string;
+    password: string;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace

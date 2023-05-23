@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionSummary,
+  Alert,
   Button,
   Container,
   Divider,
@@ -148,35 +149,43 @@ const Groups = () => {
                 Мои группы
               </Typography>
               <Divider />
-              <TableContainer>
-                <Table size={"small"}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Имя</TableCell>
-                      <TableCell>Курс/Группа/Подгруппа</TableCell>
-                      <TableCell>Настройка</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {myGroups.map((g) => (
+              {myGroups.length > 0 ? (
+                <TableContainer>
+                  <Table size={"small"}>
+                    <TableHead>
                       <TableRow>
-                        <TableCell>{g.name}</TableCell>
-                        <TableCell>
-                          {g.course} / {g.group} / {g.subGroup}
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            color={"primary"}
-                            onClick={() => navigate(g.id)}
-                          >
-                            <OpenInNewIcon />
-                          </IconButton>
-                        </TableCell>
+                        <TableCell>Имя</TableCell>
+                        <TableCell>Курс/Группа/Подгруппа</TableCell>
+                        <TableCell>Настройка</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {myGroups.map((g) => (
+                        <TableRow>
+                          <TableCell>{g.name}</TableCell>
+                          <TableCell>
+                            {g.course} / {g.group} / {g.subGroup}
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              color={"primary"}
+                              onClick={() => navigate(g.id)}
+                            >
+                              <OpenInNewIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <Alert severity={"info"}>
+                  В данном блоке будет список групп, которые были созданы Вами.
+                  На данный момент Вы не создали ни одной группы. Чтобы создать
+                  новую группу, нажмите кнопку "Новая группа".
+                </Alert>
+              )}
             </Paper>
           </Grid>
         </Grid>

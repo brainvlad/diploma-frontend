@@ -11,9 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
-import { grey } from "@mui/material/colors";
 import Logo from "../Logo";
 
 const pages = [
@@ -26,7 +24,6 @@ const pages = [
     to: "/subjects",
   },
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 type Props = {
   userName: string;
@@ -40,6 +37,17 @@ function ResponsiveAppBar({ userName }: Props) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const settings = [
+    {
+      label: "Выйти",
+      action: () => {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        navigate("/auth/login");
+      },
+    },
+  ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -181,8 +189,8 @@ function ResponsiveAppBar({ userName }: Props) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.label} onClick={setting.action}>
+                  <Typography textAlign="center">{setting.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>

@@ -1,10 +1,19 @@
 import { Typography } from "@mui/material";
 
-const Logo = () => {
+type Props = {
+  size?: "large" | "small";
+};
+
+const Logo = ({ size = "small" }: Props) => {
+  const sizes = {
+    small: 0.45,
+    large: 2,
+  };
+
   return (
     <div
       style={{
-        transform: "scale(0.45)",
+        transform: `scale(${sizes[size]})`,
         padding: 0,
         margin: 0,
         // width: "60px",

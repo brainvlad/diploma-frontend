@@ -15,6 +15,13 @@
             padding: 0;
         }
 
+        #app {
+            margin: 0;
+            width: 100%;
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
         body {
             background-image: url("%PUBLIC_URL%/bg2.svg");
             background-position: center;
@@ -41,8 +48,11 @@
     <title>React App</title>
 </head>
 <body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
+<div id="app">
+
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+</div>
 <!--
 This HTML file is a template.
 If you open it directly in the browser, you will see an empty page.

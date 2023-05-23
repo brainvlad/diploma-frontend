@@ -5,6 +5,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+  Alert,
   Button,
   Container,
   Divider,
@@ -65,6 +66,31 @@ const Groups = () => {
           <Divider />
         </Box>
         <div>
+          {subjects.length === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignSelf: "center",
+                justifyContent: "center",
+                justifyItems: "center",
+                alignItems: "center",
+              }}
+            >
+              <Alert
+                severity={"info"}
+                sx={{
+                  width: "550px",
+                  border: "1px solid #1893D5",
+                }}
+              >
+                Вы наверное тут в первый раз, поэтому тут ничего нет. Вы можете
+                создать новый предмет вызвав окно с формой кликом по кнопке
+                "Создать". Заполните данные о предмете: название, короткое
+                название (алиас). Это несложно.
+              </Alert>
+            </Box>
+          ) : null}
           {!!subjects.length
             ? subjects.map((subject: any) => (
                 <Accordion
