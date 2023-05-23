@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getStudyPlan } from "../../http/subjects";
 import {
+  Alert,
+  Box,
   Breadcrumbs,
   Button,
   Container,
@@ -94,67 +96,83 @@ const StudyPlanSettings = () => {
             </Button>
           </Stack>
 
-          <TableContainer component={Paper}>
-            <Table size={"small"}>
-              <TableBody>
-                {state.value?.items?.map((p: any) => (
-                  <TableRow>
-                    <TableCell>
-                      {p.order} {p.topic}
-                    </TableCell>
-                    <TableCell sx={{ width: 150 }}>
-                      <Stack direction={"row"}>
-                        <Dialog
-                          open={openCriteriaId === p.id}
-                          handleClose={() => setOpenCriteriaId(null)}
-                          title={`Тема: ${p.topic}`}
-                          contentText={
-                            "Настройка критерив оценки выполнения задания"
-                          }
-                          handleSubmit={() => {
-                            setCreateNewItem(false);
-                          }}
-                          showAction={false}
-                        >
-                          <CriteriaCreateForm
-                            planItemId={p.id}
+          {state.value?.items?.length > 0 ? (
+            <TableContainer component={Paper}>
+              <Table size={"small"}>
+                <TableBody>
+                  {state.value?.items?.map((p: any) => (
+                    <TableRow>
+                      <TableCell>
+                        {p.order} {p.topic}
+                      </TableCell>
+                      <TableCell sx={{ width: 150 }}>
+                        <Stack direction={"row"}>
+                          <Dialog
                             open={openCriteriaId === p.id}
-                            callback={() => {
-                              setOpenCriteriaId(null);
-                              run(subjectId);
+                            handleClose={() => setOpenCriteriaId(null)}
+                            title={`Тема: ${p.topic}`}
+                            contentText={
+                              "Настройка критерив оценки выполнения задания"
+                            }
+                            handleSubmit={() => {
+                              setCreateNewItem(false);
                             }}
+                            showAction={false}
+                          >
+                            <CriteriaCreateForm
+                              planItemId={p.id}
+                              open={openCriteriaId === p.id}
+                              callback={() => {
+                                setOpenCriteriaId(null);
+                                run(subjectId);
+                              }}
+                            />
+                          </Dialog>
+                          <ConfirmationDialog
+                            handleClose={() => setDeleteConfirm(p.id)}
+                            handleAgree={() =>
+                              removeItem(p.id).then(() => run(subjectId))
+                            }
+                            open={deleteConfirm === p.id}
+                            content={`Вы удалите информацию о теме ${p.order} - ${p.topic}. Данные оценок студентов по данной теме также будут удалены.`}
+                            title={"Вы уверены?"}
                           />
-                        </Dialog>
-                        <ConfirmationDialog
-                          handleClose={() => setDeleteConfirm(p.id)}
-                          handleAgree={() =>
-                            removeItem(p.id).then(() => run(subjectId))
-                          }
-                          open={deleteConfirm === p.id}
-                          content={`Вы удалите информацию о теме ${p.order} - ${p.topic}. Данные оценок студентов по данной теме также будут удалены.`}
-                          title={"Вы уверены?"}
-                        />
-                        <IconButton
-                          color={"primary"}
-                          onClick={() => {
-                            setOpenCriteriaId(p.id);
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          color={"error"}
-                          onClick={() => setDeleteConfirm(p.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                          <IconButton
+                            color={"primary"}
+                            onClick={() => {
+                              setOpenCriteriaId(p.id);
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            color={"error"}
+                            onClick={() => setDeleteConfirm(p.id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <Box>
+              <Alert severity={"info"} sx={{ border: "1px solid #1893D5" }}>
+                Предмет с названием{" "}
+                <u>
+                  <b>"{state.value?.subject?.name}"</b>
+                </u>{" "}
+                уже добавлен и Вы можете с ним работать. На этой странице Вы
+                должны заполнить учебный план предмета. Под учебным планом
+                иммется ввиду список тем, также в каждой теме Вы можете
+                объявиться критерии и коэффициенты, по которым будет ставиться
+                итоговая оценка студенту за выполнение работы
+              </Alert>
+            </Box>
+          )}
         </Stack>
       </Container>
     );
