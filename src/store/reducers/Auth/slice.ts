@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { AuthUserInfo } from '../../../types/auth';
+import { createSlice } from "@reduxjs/toolkit";
+import { AuthUserInfo } from "../../../types/auth";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -14,15 +14,15 @@ const initialState: AuthState = {
   registerSuccess: false,
   data: {
     user: null,
-    access: localStorage.getItem('access') || '',
-    refresh: localStorage.getItem('refresh') || '',
+    access: localStorage.getItem("access") || "",
+    refresh: localStorage.getItem("refresh") || "",
   },
   error: null,
   isLoading: false,
 };
 
 export const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     authSuccess(state, action) {

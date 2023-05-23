@@ -18,12 +18,14 @@ const StudyPlanSettingsPage = lazy(() => import("../pages/StudyPlanSettings"));
 const GroupsPage = lazy(() => import("../pages/Groups"));
 const GroupsSettingsPage = lazy(() => import("../pages/Groups/GroupSettings"));
 const ViewStatisticsPage = lazy(() => import("../pages/ViewStatistics"));
+const AdminPanel = lazy(() => import("../pages/AdminPanel"));
+const AdminStudentsPage = lazy(() => import("../pages/AdminPanel/Students"));
 
 const SharedClassTable = lazy(() => import("../pages/Shared/ClassTable"));
 
 const AppRouter = (): JSX.Element => {
   const classes = useStyles();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, data } = useAppSelector((state) => state.auth);
   const accessExists = !!localStorage.getItem("access");
 
   const [user, setUser] = useState<any>(null);
@@ -51,7 +53,12 @@ const AppRouter = (): JSX.Element => {
           path="/"
           element={
             <>
-              {accessExists && <Header userName={user?.firstName || "N"} />}
+              {accessExists && (
+                <Header
+                  userName={user?.firstName || "N"}
+                  userType={user?.type || ""}
+                />
+              )}
               <Box className={classes.main}>
                 <Outlet />
               </Box>
@@ -83,6 +90,11 @@ const AppRouter = (): JSX.Element => {
                   <Route
                     path={"class/:classId"}
                     element={<ClassGroupTablePage />}
+                  />
+                  <Route path={"admin-panel"} element={<AdminPanel />} />
+                  <Route
+                    path={"admin-panel/students"}
+                    element={<AdminStudentsPage />}
                   />
                 </Routes>
               </RequireAuth>

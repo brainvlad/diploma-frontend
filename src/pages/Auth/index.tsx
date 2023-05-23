@@ -32,17 +32,22 @@ const Auth: React.FC = () => {
     try {
       const res = await login(data);
 
+      dispatch(loginAction(res.data));
       if (res.status >= 200 && res.status < 400) {
-        dispatch(loginAction(res.data));
+        if (res.data.type === "ADMIN") {
+          navigate("/admin-panel");
+        }
       }
       return res.data;
     } catch (e) {
       if (isAxiosError(e)) {
         const serverError = e as AxiosError;
+        console.log(serverError);
         setError(
           (serverError as any)?.response?.data?.data?.message ||
             "Что-то пошло не так. Попробуйте позже, вероятно ошибка на сервере, мы скоро это починим"
         );
+        throw serverError;
       }
       throw e;
     }

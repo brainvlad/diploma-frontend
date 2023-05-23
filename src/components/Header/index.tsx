@@ -25,11 +25,17 @@ const pages = [
   },
 ];
 
+const adminPages = [
+  { label: "Настройки", to: "/admin-panel" },
+  { label: "Студенты", to: "/admin-panel/students" },
+];
+
 type Props = {
   userName: string;
+  userType: string;
 };
 
-function ResponsiveAppBar({ userName }: Props) {
+function ResponsiveAppBar({ userName, userType }: Props) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -117,7 +123,13 @@ function ResponsiveAppBar({ userName }: Props) {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {[
+                ...(userType === "TEACHER"
+                  ? pages
+                  : userType === "ADMIN"
+                  ? adminPages
+                  : []),
+              ].map((page) => (
                 <MenuItem
                   key={page.label}
                   color={"inherit"}
@@ -154,7 +166,13 @@ function ResponsiveAppBar({ userName }: Props) {
             Е-Кафедра
           </Typography>
           <Box sx={{ flexGrow: 2, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {[
+              ...(userType === "TEACHER"
+                ? pages
+                : userType === "ADMIN"
+                ? adminPages
+                : []),
+            ].map((page) => (
               <Button
                 key={page.label}
                 onClick={() => navigate(page.to)}
