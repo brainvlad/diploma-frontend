@@ -3,6 +3,7 @@ import {
   Accordion,
   AccordionSummary,
   Alert,
+  Autocomplete,
   Button,
   Container,
   Divider,
@@ -34,6 +35,8 @@ import { useForm } from "react-hook-form";
 import Box from "@mui/material/Box";
 import GroupSettings from "./GroupSettings";
 import { useNavigate } from "react-router-dom";
+import { getAllFaculties } from "../../http/faculty";
+import { useAsyncFn } from "react-use";
 
 const Groups = () => {
   const isDesktop = useMediaQuery("(min-width:900px)");
@@ -45,10 +48,19 @@ const Groups = () => {
   const navigate = useNavigate();
 
   const { register, setValue, handleSubmit } = useForm();
+  const [facultyState, getFaculties] = useAsyncFn(async () => {
+    const res = await getAllFaculties();
+
+    return res.data;
+  });
 
   useEffect(() => {
     if (groups.length === 0) {
       getAllGroups().then((res) => setGroups(res.data.list));
+    }
+
+    if (createOpen) {
+      getFaculties();
     }
 
     if (myGroups.length === 0) {
@@ -63,7 +75,8 @@ const Groups = () => {
     register("group");
     register("course");
     register("subGroup");
-  }, [register]);
+    register("facultyId", { value: null });
+  }, [register, createOpen]);
 
   const sendRequestForCreateNewGroup = (data: any) =>
     createNewGroup(data).then((res) => {
@@ -109,6 +122,7 @@ const Groups = () => {
                             <TableHead>
                               <TableRow>
                                 <TableCell>Имя</TableCell>
+                                <TableCell>Факультет</TableCell>
                                 <TableCell>Курс</TableCell>
                                 <TableCell>Группа</TableCell>
                                 <TableCell>Подгруппа</TableCell>
@@ -120,6 +134,9 @@ const Groups = () => {
                               {_.groupBy(groups, "course")[key].map((g) => (
                                 <TableRow>
                                   <TableCell>{g.name}</TableCell>
+                                  <TableCell>
+                                    {g.facultyShortName || "-"}
+                                  </TableCell>
                                   <TableCell>{g.course}</TableCell>
                                   <TableCell>{g.group}</TableCell>
                                   <TableCell>{g.subGroup}</TableCell>
@@ -155,7 +172,7 @@ const Groups = () => {
                     <TableHead>
                       <TableRow>
                         <TableCell>Имя</TableCell>
-                        <TableCell>Курс/Группа/Подгруппа</TableCell>
+                        <TableCell>Факультет/Курс/Группа/Подгруппа</TableCell>
                         <TableCell>Настройка</TableCell>
                       </TableRow>
                     </TableHead>
@@ -164,7 +181,8 @@ const Groups = () => {
                         <TableRow>
                           <TableCell>{g.name}</TableCell>
                           <TableCell>
-                            {g.course} / {g.group} / {g.subGroup}
+                            {g.faculty?.shortName || "-"} / {g.course} /{" "}
+                            {g.group} / {g.subGroup}
                           </TableCell>
                           <TableCell>
                             <IconButton
@@ -205,6 +223,26 @@ const Groups = () => {
             size={"small"}
             onChange={(e) => setValue("name", e.target.value)}
           />
+          {!facultyState.loading &&
+          !facultyState.error &&
+          facultyState.value?.list?.length > 0 ? (
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={facultyState.value.list.map((item: any) => ({
+                id: item.id,
+                label: item.name,
+              }))}
+              onChange={(e, newValue) =>
+                setValue("facultyId", (newValue as any)?.id || null)
+              }
+              sx={{ width: 300 }}
+              renderInput={(params: any) => (
+                <TextField {...params} label="Факультет" />
+              )}
+            />
+          ) : null}
+
           <TextField
             label={"Курс"}
             fullWidth

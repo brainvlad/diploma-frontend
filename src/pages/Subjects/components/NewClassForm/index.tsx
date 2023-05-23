@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useAsyncFn } from 'react-use';
-import { getAllGroups, getGroupById } from '../../../../http/groups';
+import React, { useEffect, useState } from "react";
+import { useAsyncFn } from "react-use";
+import { getAllGroups, getGroupById } from "../../../../http/groups";
 import {
   Button,
   CircularProgress,
@@ -10,10 +10,13 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Tooltip,
   Stack,
   Typography,
-} from '@mui/material';
-import { createNewClass } from '../../../../http/classes';
+  Autocomplete,
+  TextField,
+} from "@mui/material";
+import { createNewClass } from "../../../../http/classes";
 
 type Props = {
   subjectId: string;
@@ -33,11 +36,11 @@ const NewClassForm = ({ subjectId, open, subjectName, callBack }: Props) => {
       const res = await getGroupById(groupId);
 
       return res.data;
-    },
+    }
   );
 
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
-  const [selectedGroupName, setSelectedGroupName] = useState('');
+  const [selectedGroupName, setSelectedGroupName] = useState("");
 
   useEffect(() => {
     if (subjectId && open) {
@@ -49,43 +52,53 @@ const NewClassForm = ({ subjectId, open, subjectName, callBack }: Props) => {
     return (
       <Stack spacing={2} sx={{ margin: 1.5, width: 400 }}>
         <Typography>Предмет: {subjectName}</Typography>
-        <Typography>Группа: {selectedGroupName || 'Нет выбрана'}</Typography>
+        <Typography>Группа: {selectedGroupName || "Нет выбрана"}</Typography>
         <Divider />
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={[]}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Факультет" />}
+        />
         <List
           sx={{
             maxHeight: 300,
             // border: "1px solid rgba(0,0,0,0.6)",
-            bgcolor: 'background.info',
-            '& ul': { padding: 0 },
+            bgcolor: "background.info",
+            "& ul": { padding: 0 },
           }}
           subheader={<li />}
         >
           {getGroupsState.value?.list?.length > 0
             ? getGroupsState.value.list.map((g: any) => (
-                <ListItem disablePadding>
-                  <ListItemButton
-                    onClick={() => {
-                      setSelectedGroup(g.id);
-                      getGroupByIdSubmit(g.id).then((data) =>
-                        setSelectedGroupName(
-                          `${data.name} (Курс: ${data.course}, Группа: ${data.group}, Подгруппа: ${data.subGroup})`,
-                        ),
-                      );
-                    }}
-                  >
-                    <ListItemText>
-                      {g.name} (Курс: {g.course}, Группа: {g.group}, Подгруппа:{' '}
-                      {g.subGroup})
-                    </ListItemText>
-                  </ListItemButton>
-                </ListItem>
-            ))
+                <Tooltip title={`${g.studentsCount} студентов в группе`}>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      disabled={g.studentsCount === 0}
+                      onClick={() => {
+                        setSelectedGroup(g.id);
+                        getGroupByIdSubmit(g.id).then((data) =>
+                          setSelectedGroupName(
+                            `${data.name} (Курс: ${data.course}, Группа: ${data.group}, Подгруппа: ${data.subGroup})`
+                          )
+                        );
+                      }}
+                    >
+                      <ListItemText>
+                        {g.name} (Курс: {g.course}, Группа: {g.group},
+                        Подгруппа: {g.subGroup})
+                      </ListItemText>
+                    </ListItemButton>
+                  </ListItem>
+                </Tooltip>
+              ))
             : null}
         </List>
         <Divider />
         <Button
           disabled={!selectedGroup}
-          variant={'contained'}
+          variant={"contained"}
           onClick={() => {
             if (selectedGroup) {
               createNewClass({ subjectId, groupId: selectedGroup });
@@ -103,9 +116,9 @@ const NewClassForm = ({ subjectId, open, subjectName, callBack }: Props) => {
     return (
       <Container
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
+          position: "absolute",
+          top: "50%",
+          left: "50%",
         }}
       >
         <CircularProgress />
