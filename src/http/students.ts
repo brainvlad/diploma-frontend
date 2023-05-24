@@ -23,3 +23,6 @@ export const getStudentById = (id: string) => http.get(`/students/${id}`);
 
 export const updateStudentInfo = (id: string, data: any) =>
   http.put(`/students/${id}`, data);
+
+export const getStudentProfile = (id: string) =>
+  http.get(`/students/profile/${id}`);
