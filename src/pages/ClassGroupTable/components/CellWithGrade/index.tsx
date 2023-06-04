@@ -12,6 +12,7 @@ type Props = {
   planItemId: string;
   criterias: any[];
   studentName: string;
+  setGradeCallBack: () => void;
 };
 
 const CellWithGrade = ({
@@ -21,6 +22,7 @@ const CellWithGrade = ({
   criterias,
   topic,
   studentName,
+  setGradeCallBack,
 }: Props) => {
   const [openForm, setOpenForm] = useState(false);
 
@@ -131,6 +133,10 @@ const CellWithGrade = ({
             totalGradeStarted={grade === null ? 0 : +calculatedGrade.toFixed(2)}
             topic={topic}
             studentName={studentName}
+            callback={() => {
+              setGradeCallBack();
+              setOpenForm(!openForm);
+            }}
           />
         </Dialog>
       </TableCell>

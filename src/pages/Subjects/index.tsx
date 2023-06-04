@@ -61,7 +61,11 @@ const Groups = () => {
           >
             <Typography variant={"h3"}>Мои предметы</Typography>
 
-            <SettingsBar />
+            <SettingsBar
+              getSubjectsAgain={() =>
+                getUserSubjects().then((res) => setSubjects(res.data.list))
+              }
+            />
           </Stack>
           <Divider />
         </Box>

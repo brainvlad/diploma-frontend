@@ -12,7 +12,7 @@ import {
   Button,
   TextareaAutosize,
   Checkbox,
-    Box,
+  Box,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { setStudentGrade } from "../../../../http/classes";
@@ -26,6 +26,7 @@ type Props = {
   gradeTable: any;
   topic: string;
   studentName: string;
+  callback: () => void;
 };
 
 const CriteriaSettingsForm = ({
@@ -35,6 +36,7 @@ const CriteriaSettingsForm = ({
   totalGradeStarted,
   studentName,
   topic,
+  callback,
 }: Props) => {
   const [totalGrade, setTotalGrade] = useState(totalGradeStarted);
   const [criteriaTable, setCriteriaTable] = useState<Record<string, number>>(
@@ -64,6 +66,7 @@ const CriteriaSettingsForm = ({
       }
     });
     await setStudentGrade({ grades, done: data.done, comment: data.comment });
+    callback();
   };
 
   useEffect(() => {

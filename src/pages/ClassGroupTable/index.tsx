@@ -291,14 +291,32 @@ const ClassGroupTable = () => {
                         }}
                       >
                         {isDesktop
-                            ? row.studentName
-                            : `${row.studentName.split(" ")[0]} ${
-                                row.studentName.split(" ")[1][0]
+                          ? row.studentName
+                          : `${row.studentName.split(" ")[0]} ${
+                              row.studentName.split(" ")[1][0]
                             }. ${row.studentName.split(" ")[2][0]}.`}
                       </TableCell>
                       {row.grade && plan?.length
                         ? plan.map((p) => (
                             <CellWithGrade
+                              setGradeCallBack={() => {
+                                getGradesTableByClass(classId!)
+                                  .then((res) => {
+                                    setGroupName(res.data.groupName);
+                                    setSubjectName(res.data.subjectName);
+                                    setTable(res.data.table);
+                                    setIsShared(res.data.isShared);
+                                    setPlan(
+                                      res.data.plan.sort(
+                                        (
+                                          a: { order: number },
+                                          b: { order: number }
+                                        ) => a.order - b.order
+                                      )
+                                    );
+                                  })
+                                  .then(() => run(classId!));
+                              }}
                               grade={row.grade[p.id] || null}
                               studentId={row.studentId}
                               planItemId={p.id}

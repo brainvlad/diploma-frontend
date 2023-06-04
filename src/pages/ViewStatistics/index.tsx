@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAsyncFn } from "react-use";
-import { getStatisticsViewById } from "../../http/statistics";
+import { getStatisticsViewById, removeStatistics } from "../../http/statistics";
 import {
   Container,
   TableContainer,
@@ -20,16 +20,25 @@ import {
   AccordionDetails,
   CircularProgress,
   Alert,
+  Button,
 } from "@mui/material";
 import Box from "@mui/material/Box";
+import { getAuthUserData } from "../../http/auth";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
+import { toast } from "react-hot-toast";
 
 const ViewStatistics = () => {
   const { id } = useParams();
 
+  const [deleteDialog, setDeleteDialog] = useState(false);
+
+  const navigate = useNavigate();
+
   const [state, run] = useAsyncFn(async (id: string) => {
     const res = await getStatisticsViewById(id);
+    const authUser = await getAuthUserData();
 
-    return res.data;
+    return { ...res.data, authUser };
   });
 
   useEffect(() => {
@@ -40,12 +49,62 @@ const ViewStatistics = () => {
 
   if (!state.loading && !state.error)
     return (
-      <Container>
+      <Container sx={{ marginTop: 2 }}>
+        <ConfirmationDialog
+          handleClose={() => setDeleteDialog(!deleteDialog)}
+          handleAgree={() => {
+            removeStatistics(id!).then((res) => {
+              if (res.status >= 200 && res.status < 400) {
+                navigate(`/class/${state?.value?.classRoom?.id}`);
+                toast.success(
+                  `Статистика "${state.value?.title}" была успешно удалена!`
+                );
+              }
+            });
+          }}
+          open={deleteDialog}
+          content={`Вы действительно хотите удалить статистику "${state.value?.title}" по предмету ${state.value?.subject?.name} для группы ${state.value?.groupName}?`}
+          title={"Удалить статистику"}
+        />
         <Grid container spacing={2}>
           <Grid item xs={8}>
             <Stack spacing={2}>
-              <Typography variant={"h5"}>Статистика по группе</Typography>
+              <Typography variant={"h5"}>
+                Статистика по группе: <u>{state.value?.title}</u>
+              </Typography>
+
               <Divider />
+
+              <Paper sx={{ padding: 1 }}>
+                <Stack spacing={1}>
+                  <Typography variant={"subtitle1"}>
+                    {state.value?.subject?.name}
+                  </Typography>
+                  <Typography variant={"caption"}>
+                    Преподаватель: {state.value?.subject?.teacher?.firstName}{" "}
+                    {state.value?.subject?.teacher?.middleName}{" "}
+                    {state.value?.subject?.teacher?.lastName}
+                  </Typography>
+                  <Typography variant={"caption"}>
+                    Группа: {state.value?.groupName}
+                  </Typography>
+                  <br />
+                  {state.value?.comment ? (
+                    <Alert severity={"info"}>{state.value?.comment}</Alert>
+                  ) : null}
+                  {state.value?.authUser ? (
+                    <Button
+                      variant={"text"}
+                      color={"error"}
+                      size={"small"}
+                      sx={{ width: "30%" }}
+                      onClick={() => setDeleteDialog(!deleteDialog)}
+                    >
+                      Удалить статистику
+                    </Button>
+                  ) : null}
+                </Stack>
+              </Paper>
 
               <TableContainer component={Paper}>
                 <Table>
@@ -92,9 +151,7 @@ const ViewStatistics = () => {
                           </AccordionSummary>
                           <AccordionDetails>
                             <Alert severity={"info"}>
-                              <Typography>
-                                {t.description}
-                              </Typography>
+                              <Typography>{t.description}</Typography>
                             </Alert>
                           </AccordionDetails>
                         </Accordion>

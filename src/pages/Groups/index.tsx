@@ -75,6 +75,7 @@ const Groups = () => {
     register("group");
     register("course");
     register("subGroup");
+    register("description", { value: null, required: false });
     register("facultyId", { value: null });
   }, [register, createOpen]);
 
@@ -82,6 +83,12 @@ const Groups = () => {
     createNewGroup(data).then((res) => {
       if (res.status >= 200 && res.status < 400) {
         getAllGroups().then((r) => setGroups(r.data.list));
+        getUserGroups()
+          .then((res) => {
+            return res;
+          })
+          .then((res) => setMyGroups(res.data.list));
+        setCreateOpen(!createOpen);
       }
     });
 
@@ -216,7 +223,7 @@ const Groups = () => {
         handleSubmit={() => setCreateOpen(!createOpen)}
         showAction={false}
       >
-        <Stack spacing={2}>
+        <Stack spacing={2} sx={{ minWidth: "350px", marginTop: 1 }}>
           <TextField
             label={"Имя (подпись) группы"}
             fullWidth
@@ -236,9 +243,9 @@ const Groups = () => {
               onChange={(e, newValue) =>
                 setValue("facultyId", (newValue as any)?.id || null)
               }
-              sx={{ width: 300 }}
+              // sx={{ width: 300 }}
               renderInput={(params: any) => (
-                <TextField {...params} label="Факультет" />
+                <TextField {...params} label="Факультет" size={"small"} />
               )}
             />
           ) : null}
@@ -260,6 +267,14 @@ const Groups = () => {
             fullWidth
             size={"small"}
             onChange={(e) => setValue("subGroup", +e.target.value)}
+          />
+
+          <TextField
+            label={"Описание (необязательно)"}
+            multiline={true}
+            rows={4}
+            fullWidth
+            onChange={(e) => setValue("description", e.target.value)}
           />
           <Button
             variant={"contained"}

@@ -8,13 +8,17 @@ import { createSubject } from '../../../../http/subjects';
 type Props = {
   open: boolean;
   handleOpen: () => void;
+  callback: () => void;
 };
 
-export default function CreateSubjectForm({ open, handleOpen }: Props) {
+export default function CreateSubjectForm({ open, handleOpen, callback }: Props) {
   const [name, setName] = useState<string>();
   const [alias, setAlias] = useState<string>();
 
-  const handleSubmit = () => createSubject({ name, alias });
+  const handleSubmit = () => {
+    createSubject({ name, alias });
+    callback();
+  };
 
   return (
     <Dialog

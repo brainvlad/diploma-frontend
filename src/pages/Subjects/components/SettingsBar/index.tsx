@@ -4,7 +4,11 @@ import { Create as CreateIcon } from "@mui/icons-material";
 import Dialog from "../../../../components/Dialog";
 import CreateSubjectForm from "../CreateSubjectForm";
 
-const SettingsBar = () => {
+type Props = {
+  getSubjectsAgain: () => void;
+};
+
+const SettingsBar = ({ getSubjectsAgain }: Props) => {
   const isDesktop = useMediaQuery("(min-width:550px)");
 
   const [openCreate, setOpenCreate] = useState<boolean>(false);
@@ -22,6 +26,10 @@ const SettingsBar = () => {
       </Button>
 
       <CreateSubjectForm
+        callback={() => {
+          getSubjectsAgain();
+          setOpenCreate(!openCreate);
+        }}
         open={openCreate}
         handleOpen={() => setOpenCreate(!openCreate)}
       />

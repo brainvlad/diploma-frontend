@@ -138,7 +138,7 @@ const AppRouter = (): JSX.Element => {
           element={<SharedClassTable />}
         />
         <Route
-          path={"shred/group-statistics/:id"}
+          path={"shared/group-statistics/:id"}
           element={<ViewStatisticsPage />}
         />
         <Route path="auth/register" element={<RegistrationPage />} />
