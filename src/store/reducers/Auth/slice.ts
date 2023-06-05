@@ -33,7 +33,8 @@ export const authSlice = createSlice({
       state.isLoading = false;
     },
     authFailed(state, action) {
-      state.error = action.payload.message;
+      console.log(action.payload);
+      state.error = action.payload.data.message;
       state.isLoading = false;
     },
     authFetch(state) {

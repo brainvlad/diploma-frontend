@@ -39,7 +39,9 @@ const Registration = () => {
       if (isAxiosError(error)) {
         const serverError = error as AxiosError;
         setError(
-          (serverError as any)?.response?.data?.data?.message ||
+          (Array.isArray((serverError as any)?.response?.data?.data?.message)
+            ? (serverError as any)?.response?.data?.data?.message[0]
+            : (serverError as any)?.response?.data?.data?.message) ||
             "Что-то пошло не так. Попробуйте позже, вероятно ошибка на сервере, мы скоро это починим"
         );
       }
