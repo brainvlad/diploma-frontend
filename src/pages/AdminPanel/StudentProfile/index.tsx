@@ -23,6 +23,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import StudentContextMenu from "./components/StudentContextMenu";
 
 const StudentProfile = () => {
   const { studentId } = useParams();
@@ -45,27 +46,30 @@ const StudentProfile = () => {
       <Container>
         <Stack spacing={2}>
           <Paper sx={{ padding: 1 }}>
-            <Stack spacing={0.5}>
-              <Typography variant={"h5"}>
-                Профиль студента:{" "}
-                <u>
-                  {state.value?.firstName} {state.value?.middleName}{" "}
-                  {state.value?.lastName}
-                </u>
-              </Typography>
-              <Divider />
-              <Typography variant={"caption"}>
-                Факультет: <b>{state.value.group?.faculty?.name || "-"}</b>
-              </Typography>
-              <Typography variant={"caption"}>
-                Курс: <b>{state.value.group?.course}</b>
-              </Typography>
-              <Typography variant={"caption"}>
-                Группа:{" "}
-                <b>
-                  {state.value.group.group} - {state.value.group.subGroup}
-                </b>
-              </Typography>
+            <Stack direction={"row"} justifyContent={"space-between"}>
+              <Stack spacing={0.5}>
+                <Typography variant={"h5"}>
+                  Профиль студента:{" "}
+                  <u>
+                    {state.value?.firstName} {state.value?.middleName}{" "}
+                    {state.value?.lastName}
+                  </u>
+                </Typography>
+                <Divider />
+                <Typography variant={"caption"}>
+                  Факультет: <b>{state.value.group?.faculty?.name || "-"}</b>
+                </Typography>
+                <Typography variant={"caption"}>
+                  Курс: <b>{state.value.group?.course}</b>
+                </Typography>
+                <Typography variant={"caption"}>
+                  Группа:{" "}
+                  <b>
+                    {state.value.group.group} - {state.value.group.subGroup}
+                  </b>
+                </Typography>
+              </Stack>
+              <StudentContextMenu studentId={studentId!} />
             </Stack>
           </Paper>
 

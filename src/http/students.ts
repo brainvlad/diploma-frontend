@@ -26,3 +26,5 @@ export const updateStudentInfo = (id: string, data: any) =>
 
 export const getStudentProfile = (id: string) =>
   http.get(`/students/profile/${id}`);
+
+export const deleteStudent = (id: string) => http.delete(`/students/${id}`);
