@@ -23,6 +23,8 @@ const AdminStudentsPage = lazy(() => import("../pages/AdminPanel/Students"));
 const AdminStudentProfile = lazy(
   () => import("../pages/AdminPanel/StudentProfile")
 );
+const AdminGroupsList = lazy(() => import("../pages/AdminPanel/GroupsList"));
+const AdminPanelUsers = lazy(() => import("../pages/AdminPanel/Users"));
 
 const SharedClassTable = lazy(() => import("../pages/Shared/ClassTable"));
 
@@ -102,6 +104,14 @@ const AppRouter = (): JSX.Element => {
                   <Route
                     path={"admin-panel/students/profile/:studentId"}
                     element={<AdminStudentProfile />}
+                  />
+                  <Route
+                    path={"admin-panel/groups"}
+                    element={<AdminGroupsList />}
+                  />
+                  <Route
+                    path={"admin-panel/users"}
+                    element={<AdminPanelUsers />}
                   />
                 </Routes>
               </RequireAuth>

@@ -28,6 +28,8 @@ const pages = [
 const adminPages = [
   { label: "Настройки", to: "/admin-panel" },
   { label: "Студенты", to: "/admin-panel/students" },
+  { label: "Группы", to: "/admin-panel/groups" },
+  { label: "Пользователи", to: "/admin-panel/users" },
 ];
 
 type Props = {
